@@ -3,12 +3,7 @@ import random
 
 WIDTH = 4
 HEIGHT = 4
-
-
-# Plansza =
-
-# Nazwy klas (CapLet, CamelCase), nazwy metod (), pola klasy, argumenty metod
-# NazwyKlas, nazwy_metod
+SPECIAL_DEMOTION = 3
 
 
 class MoveEnum(enum.Enum):
@@ -23,8 +18,6 @@ class Model:
         raise NotImplemented
 
     def makeMove(self, move):
-        # polityka poruszania (przesuń wszystko)
-        # Wylosuj nowy pionek i połóż go na planszy
         raise NotImplemented
 
     def stateInfo(self):
@@ -37,15 +30,18 @@ class Threes(Model):
         self.height = HEIGHT
         self.board = [[0 for _ in range(self.width)] for _ in range(self.height)]
         self.highest = 3
-        self.poss_nexts = [1, 2, 3]
-        self.next = random.choice(self.poss_nexts)
+        self.highest_power = 0
+        self.poss_nexts = [(i % 3) + 1 for i in range(12)]
+        random.shuffle(self.poss_nexts)
+        self.poss_index = 0
+        self.next = self._getNext()
         self._initBoard()
 
     def _initBoard(self):
         fields = [(x, y) for x in range(self.width) for y in range(self.height)]
         random.shuffle(fields)
         for x, y in fields[:9]:
-            self.board[y][x] = random.choice(self.poss_nexts)
+            self.board[y][x] = random.choice(range(1, 4))
 
     def _canMove(self, xs, ys, x_mod, y_mod):
         for y in ys:
@@ -104,12 +100,25 @@ class Threes(Model):
             self.board[0][random.choice(x_moved)] = self.next
 
         self.highest = max(max(x) for x in self.board)
-        if max(self.poss_nexts) * 8 < self.highest:
-            self.poss_nexts += [self.poss_nexts[-1] * 3]
-        self.next = random.choice(self.poss_nexts)
+        if self.highest > 3 * 2 ** self.highest_power:
+            self.highest_power += 1
+        self.next = self._getNext()
 
     def stateInfo(self):
         return self.board
+
+    def _getNext(self):
+        random_list = list(range(21))
+        r = random.choice(random_list)
+        if r == 0 and self.highest_power > SPECIAL_DEMOTION:
+            p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))
+            return 3 * 2 ** p
+        result = self.poss_nexts[self.poss_index]
+        self.poss_index += 1
+        if self.poss_index >= len(self.poss_nexts):
+            random.shuffle(self.poss_nexts)
+            self.poss_index = 0
+        return result
 
     def _join(self, el1, el2):
         return el1 + el2
@@ -140,17 +149,6 @@ def put_piece(t, x, y, el):
 t = Threes()
 printer(t)
 
-# for j in range(4):
-#    for i in range(4):
-#        put_piece(t, j, i, (1 + i) * (j+1))
-
-# #put_piece(t, 0, 0, 0)
-# printer(t)
-# print(t.canMove(MoveEnum.Left))
-# t.makeMove(MoveEnum.Left)
-# #t.makeMove(MoveEnum.Left)
-# #t.makeMove(MoveEnum.Right)
-# printer(t)
 moves_dict = {"w": MoveEnum.Up,
               "a": MoveEnum.Left,
               "s": MoveEnum.Down,
