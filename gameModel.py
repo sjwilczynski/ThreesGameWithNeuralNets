@@ -1,6 +1,7 @@
 import enum
 import random
 
+
 WIDTH = 4
 HEIGHT = 4
 SPECIAL_DEMOTION = 3
@@ -36,6 +37,7 @@ class Threes(Model):
         self.poss_index = 0
         self.next = self._getNext()
         self._initBoard()
+        self.current_score = 0
 
     def _initBoard(self):
         fields = [(x, y) for x in range(self.width) for y in range(self.height)]
@@ -103,6 +105,7 @@ class Threes(Model):
         if self.highest > 3 * 2 ** self.highest_power:
             self.highest_power += 1
         self.next = self._getNext()
+        self.current_score = self.score()
 
     def stateInfo(self):
         return self.board
@@ -130,6 +133,19 @@ class Threes(Model):
             return True
         return False
 
+    def score(self):
+        '''
+        Calculates the score of the current game state - TODO
+        '''
+        return 0
+
+    def saveState(self):
+        '''
+        This function saves the game state for future learning.
+        State of the board, next value, current score and performed moved are saved.
+        '''
+        pass
+
 
 def printer(t):
     b = t.stateInfo()
@@ -146,8 +162,8 @@ def put_piece(t, x, y, el):
     t.board[y][x] = el
 
 
-t = Threes()
-printer(t)
+game = Threes()
+printer(game)
 
 moves_dict = {"w": MoveEnum.Up,
               "a": MoveEnum.Left,
@@ -156,15 +172,16 @@ moves_dict = {"w": MoveEnum.Up,
 while True:
     anymove = False
     for m in moves_dict.values():
-        anymove = anymove or t.canMove(m)
+        anymove = anymove or game.canMove(m)
     if not anymove:
         break
     w = input()
+    game.saveState()
     if w in moves_dict:
         m = moves_dict[w]
-        if t.canMove(m):
-            t.makeMove(m)
+        if game.canMove(m):
+            game.makeMove(m)
         else:
-            print("NOOOO!")
+            print("THE MOVE IS NOT VALID!")
     print()
-    printer(t)
+    printer(game)
