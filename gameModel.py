@@ -1,5 +1,7 @@
 import enum
 import random
+import time
+import numpy as np
 
 
 WIDTH = 4
@@ -26,18 +28,20 @@ class Model:
 
 
 class Threes(Model):
-    def __init__(self):
+    def __init__(self, save_game=True):
+        self.save_game = save_game
         self.width = WIDTH
         self.height = HEIGHT
-        self.board = [[0 for _ in range(self.width)] for _ in range(self.height)]
+        self.board = np.array([[0 for _ in range(self.width)] for _ in range(self.height)], dtype=np.int32)
         self.highest = 3
         self.highest_power = 0
-        self.poss_nexts = [(i % 3) + 1 for i in range(12)]
+        self.poss_nexts = np.array([(i % 3) + 1 for i in range(12)], dtype=np.int32)
         random.shuffle(self.poss_nexts)
         self.poss_index = 0
         self.next = self._getNext()
         self._initBoard()
-        self.current_score = 0
+        self.filename = "game_results/" + time.strftime("%Y%m%d-%H%M%S")
+        self.turn_counter = 0
 
     def _initBoard(self):
         fields = [(x, y) for x in range(self.width) for y in range(self.height)]
@@ -105,7 +109,6 @@ class Threes(Model):
         if self.highest > 3 * 2 ** self.highest_power:
             self.highest_power += 1
         self.next = self._getNext()
-        self.current_score = self.score()
 
     def stateInfo(self):
         return self.board
@@ -142,14 +145,34 @@ class Threes(Model):
     def saveState(self):
         '''
         This function saves the game state for future learning.
-        State of the board, next value, current score and performed moved are saved.
+        Current turn, state of the board, next value, current score and performed moved are saved.
         '''
-        pass
+        file = open(self.filename, 'a+')
+        row = np.array(self.board.flatten())
+        row = np.append([self.turn_counter], row)
+        row = np.append(row, [self.next, self.score()])
+        file.write(np.array2string(row, separator=',')+'\n')
+        file.close()
 
 
-def printer(t):
-    b = t.stateInfo()
-    for ys in b:
+def read_saved_result(filename):
+    '''
+    for future usage - read data from saved states
+    '''
+    file = open(filename, 'r')
+    lines = file.read().splitlines()
+    for line in lines:
+        data = np.fromstring(line[1:-1], sep=',', dtype = np.int32)
+        turn = data[0]
+        board = data[1:17]
+        next_value = data[17]
+        score = data[18]
+        print('{} {} {} {}'.format(turn, board, next_value, score))
+
+
+def printer(curr_game):
+    board = curr_game.stateInfo()
+    for ys in board:
         for el in ys:
             x = "."
             if el != 0:
@@ -161,7 +184,6 @@ def printer(t):
 def put_piece(t, x, y, el):
     t.board[y][x] = el
 
-
 game = Threes()
 printer(game)
 
@@ -170,18 +192,22 @@ moves_dict = {"w": MoveEnum.Up,
               "s": MoveEnum.Down,
               "d": MoveEnum.Right}
 while True:
-    anymove = False
+    any_move = False
     for m in moves_dict.values():
-        anymove = anymove or game.canMove(m)
-    if not anymove:
+        any_move = any_move or game.canMove(m)
+    if not any_move:
         break
     w = input()
-    game.saveState()
     if w in moves_dict:
         m = moves_dict[w]
         if game.canMove(m):
+            if game.save_game:
+                game.saveState()
+            game.turn_counter += 1
             game.makeMove(m)
         else:
             print("THE MOVE IS NOT VALID!")
+    else:
+        print("INVALID COMMAND")
     print()
     printer(game)
