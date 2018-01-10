@@ -10,9 +10,9 @@ SPECIAL_DEMOTION = 3
 
 
 class MoveEnum(enum.Enum):
-    Left = 0,
-    Up = 1,
-    Right = 2,
+    Left = 0
+    Up = 1
+    Right = 2
     Down = 3
 
 
@@ -142,7 +142,7 @@ class Threes(Model):
         '''
         return 0
 
-    def saveState(self):
+    def saveState(self, move):
         '''
         This function saves the game state for future learning.
         Current turn, state of the board, next value, current score and performed moved are saved.
@@ -150,7 +150,7 @@ class Threes(Model):
         file = open(self.filename, 'a+')
         row = np.array(self.board.flatten())
         row = np.append([self.turn_counter], row)
-        row = np.append(row, [self.next, self.score()])
+        row = np.append(row, [self.next, self.score(), move])
         file.write(np.array2string(row, separator=',')+'\n')
         file.close()
 
@@ -204,7 +204,7 @@ if __name__ == '__main__':
             m = moves_dict[w]
             if game.canMove(m):
                 if game.save_game:
-                    game.saveState()
+                    game.saveState(m.value)
                 game.turn_counter += 1
                 game.makeMove(m)
             else:
