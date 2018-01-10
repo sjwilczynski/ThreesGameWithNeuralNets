@@ -184,30 +184,32 @@ def printer(curr_game):
 def put_piece(t, x, y, el):
     t.board[y][x] = el
 
-game = Threes()
-printer(game)
 
-moves_dict = {"w": MoveEnum.Up,
-              "a": MoveEnum.Left,
-              "s": MoveEnum.Down,
-              "d": MoveEnum.Right}
-while True:
-    any_move = False
-    for m in moves_dict.values():
-        any_move = any_move or game.canMove(m)
-    if not any_move:
-        break
-    w = input()
-    if w in moves_dict:
-        m = moves_dict[w]
-        if game.canMove(m):
-            if game.save_game:
-                game.saveState()
-            game.turn_counter += 1
-            game.makeMove(m)
-        else:
-            print("THE MOVE IS NOT VALID!")
-    else:
-        print("INVALID COMMAND")
-    print()
+if __name__ == '__main__':
+    game = Threes()
     printer(game)
+
+    moves_dict = {"w": MoveEnum.Up,
+                  "a": MoveEnum.Left,
+                  "s": MoveEnum.Down,
+                  "d": MoveEnum.Right}
+    while True:
+        any_move = False
+        for m in moves_dict.values():
+            any_move = any_move or game.canMove(m)
+        if not any_move:
+            break
+        w = input()
+        if w in moves_dict:
+            m = moves_dict[w]
+            if game.canMove(m):
+                if game.save_game:
+                    game.saveState()
+                game.turn_counter += 1
+                game.makeMove(m)
+            else:
+                print("THE MOVE IS NOT VALID!")
+        else:
+            print("INVALID COMMAND")
+        print()
+        printer(game)
