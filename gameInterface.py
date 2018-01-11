@@ -131,7 +131,7 @@ if __name__ == '__main__':
                         m = keys_dict[key_pressed]
                         if game.canMove(m):
                             if game.save_game:
-                                game.saveState()
+                                game.saveState(m.value)
                             game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()
