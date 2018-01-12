@@ -97,6 +97,7 @@ if __name__ == '__main__':
     pygame.font.init()
     pygame.display.set_caption('threes')
     game = Threes()
+    filename = getFilename()
     interface = Interface(game)
     interface.redraw()
     end = False
@@ -132,7 +133,7 @@ if __name__ == '__main__':
                         m = keys_dict[key_pressed]
                         if game.canMove(m):
                             if game.save_game:
-                                game.saveState(m.value)
+                                saveState(game, m.value, filename)
                             game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()

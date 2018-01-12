@@ -1,4 +1,5 @@
 import enum
+import time
 
 import numpy as np
 
@@ -20,6 +21,9 @@ class State:
         self.visible_nexts = visible_nexts
 
 class Model:
+    def __init__(self, save_game):
+        self.save_game = save_game
+
     def canMove(self, move):
         raise NotImplemented
 
@@ -30,7 +34,26 @@ class Model:
         raise NotImplemented
 
     def data(self):
+        """
+        This method should return all data about current state of the model used by neural network.
+        """
         raise NotImplemented
+
+
+def getFilename():
+    return "game_results/" + time.strftime("%Y%m%d-%H%M%S")
+
+
+def saveState(model, move, filename):
+    '''
+    This function saves the game state for future learning.
+    Current turn, state of the board, next value, current score and performed moved are saved.
+    '''
+    file = open(filename, 'a+')
+    row = model.data()
+    row = np.append([move], row)
+    file.write(np.array2string(row, separator=',') + '\n')
+    file.close()
 
 def read_saved_result(filename):
     '''

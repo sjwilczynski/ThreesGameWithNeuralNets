@@ -1,12 +1,12 @@
 import math
 import random
-import time
 
 from gameModel import *
 
 
 class Threes(Model):
     def __init__(self, save_game=True):
+        super(Threes, self).__init__(save_game)
         self.save_game = save_game
         self.width = WIDTH
         self.height = HEIGHT
@@ -17,9 +17,8 @@ class Threes(Model):
         random.shuffle(self.poss_nexts)
         self.poss_index = 0
         self._initBoard()
-        self.visible_nexts = None
-        self.next = self._getNext()
-        self.filename = "game_results/" + time.strftime("%Y%m%d-%H%M%S")
+        self._calculateNext()
+        self._calculateVisibleNexts()
         self.turn_counter = 0
 
     def _initBoard(self):
@@ -91,20 +90,21 @@ class Threes(Model):
         self.highest = max(max(x) for x in self.board)
         if self.highest > 3 * 2 ** self.highest_power:
             self.highest_power += 1
-        self.next = self._getNext()
-        self.visible_nexts = self._getVisibleNexts()
+        self._calculateNext()
+        self._calculateVisibleNexts()
 
     def stateInfo(self):
         return State(self.board, self.visible_nexts)
 
-    def _getVisibleNexts(self):
+    def _calculateVisibleNexts(self):
         if self.next <= 3:
-            return self.next
+            self.visible_nexts = [self.next]
+            return
         if self.highest_power - SPECIAL_DEMOTION < 3:
-            result = []
+            self.visible_nexts = []
             for p in range(1, self.highest_power - SPECIAL_DEMOTION + 1):
-                result += [3 * (2 ** p)]
-            return result
+                self.visible_nexts += [3 * (2 ** p)]
+            return
         factor = Threes._scoringFactor(self.next) - 1
         poss = []
         if factor > 2:
@@ -114,23 +114,23 @@ class Threes(Model):
         if self.highest_power - SPECIAL_DEMOTION - 1 >= factor > 1:
             poss += [0]  # 12 24 48
         modifier = random.choice(poss)
-        result = []
+        self.visible_nexts = []
         for p in range(-1, 2):
-            result += [3 * 2 ** (p + modifier + factor)]
-        return result
+            self.visible_nexts += [3 * 2 ** (p + modifier + factor)]
 
-    def _getNext(self):
+    def _calculateNext(self):
         random_list = list(range(21))
         r = random.choice(random_list)
         if r == 0 and self.highest_power > SPECIAL_DEMOTION:
             p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))
-            return 3 * 2 ** p
-        result = self.poss_nexts[self.poss_index]
+            self.next = 3 * 2 ** p
+            return self.next
+        self.next = self.poss_nexts[self.poss_index]
         self.poss_index += 1
         if self.poss_index >= len(self.poss_nexts):
             random.shuffle(self.poss_nexts)
             self.poss_index = 0
-        return result
+        return self.next
 
     def _join(self, el1, el2):
         return el1 + el2
@@ -157,23 +157,20 @@ class Threes(Model):
             return 0
         return int(math.log(element / 3, 2) + 1)
 
-    def saveState(self, move):
-        '''
-        This function saves the game state for future learning.
-        Current turn, state of the board, next value, current score and performed moved are saved.
-        '''
-        file = open(self.filename, 'a+')
-        row = np.array(self.board.flatten())
-        row = np.append([self.turn_counter], row)
-        row = np.append(row, [self.next, self.score(), move])
-        file.write(np.array2string(row, separator=',') + '\n')
-        file.close()
+    def data(self):
+        result = np.array(self.board.flatten())
+        nexts = self.visible_nexts
+        for i in range(3 - len(nexts)):
+            nexts += [-1]
+        result = np.append(nexts, result)
+        result = np.append([self.turn_counter, self.score()], result)
+        return result
 
 
 if __name__ == '__main__':
     game = Threes()
+    filename = getFilename()
     printer(game)
-
     moves_dict = {"w": MoveEnum.Up,
                   "a": MoveEnum.Left,
                   "s": MoveEnum.Down,
@@ -189,7 +186,7 @@ if __name__ == '__main__':
             m = moves_dict[w]
             if game.canMove(m):
                 if game.save_game:
-                    game.saveState(m.value)
+                    saveState(game, m.value, filename)
                 game.turn_counter += 1
                 game.makeMove(m)
             else:
