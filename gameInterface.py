@@ -1,5 +1,6 @@
 import pygame  # In order to install pygame pip3 install pygame should be enough
-from gameModel import *
+
+from threes import *
 
 SINGLE_RECT_WIDTH = 80
 SINGLE_RECT_HEIGHT = 100
@@ -13,7 +14,7 @@ EMPTY_COLOR = (187, 217, 217)
 BLACK_COLOR = (0, 0, 0)
 BACKGROUND_COLOR = (207, 231, 224)
 
-FONT_SIZE = 14
+FONT_SIZE = 34
 FONT = 'Arial'
 
 
@@ -84,11 +85,12 @@ class Interface:
         self.surface.fill(BACKGROUND_COLOR)
         for y in range(self.height):
             for x in range(self.width):
-                self._show_block(x, y, self.model.stateInfo()[y][x])
+                self._show_block(x, y, self.model.stateInfo().board[y][x])
         # TODO(shrumo): After model.next will be depreceted, change the thing to show the next properly.
-        self.surface.blit(self.block_surfaces.get_block(self.model.next),
-                          (self.surface.get_width() // 2 - SINGLE_RECT_WIDTH // 2,
-                           ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
+        print("\t", self.model.stateInfo().visible_nexts)
+        # self.surface.blit(self.block_surfaces.get_block(self.model.next),
+        #                  (self.surface.get_width() // 2 - SINGLE_RECT_WIDTH // 2,
+        #                   ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
 
 
 if __name__ == '__main__':
@@ -135,6 +137,7 @@ if __name__ == '__main__':
                             game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()
+                            print(game.score())
             if event.type == pygame.KEYUP:
                 key_pressed = pygame.key.name(event.key)
                 pressed_keys[key_pressed] = False
