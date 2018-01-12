@@ -7,7 +7,6 @@ from gameModel import *
 class Threes(Model):
     def __init__(self, save_game=True):
         super(Threes, self).__init__(save_game)
-        self.save_game = save_game
         self.width = WIDTH
         self.height = HEIGHT
         self.board = np.array([[0 for _ in range(self.width)] for _ in range(self.height)], dtype=np.int32)
@@ -93,8 +92,29 @@ class Threes(Model):
         self._calculateNext()
         self._calculateVisibleNexts()
 
-    def stateInfo(self):
-        return State(self.board, self.visible_nexts)
+    def _join(self, el1, el2):
+        return el1 + el2
+
+    def _canJoin(self, el1, el2):
+        if el1 == el2 and el1 != 2 and el1 != 1:
+            return True
+        if min(el1, el2) == 1 and max(el1, el2) == 2:
+            return True
+        return False
+
+    def _calculateNext(self):
+        random_list = list(range(21))
+        r = random.choice(random_list)
+        if r == 0 and self.highest_power > SPECIAL_DEMOTION:
+            p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))
+            self.next = 3 * 2 ** p
+            return self.next
+        self.next = self.poss_nexts[self.poss_index]
+        self.poss_index += 1
+        if self.poss_index >= len(self.poss_nexts):
+            random.shuffle(self.poss_nexts)
+            self.poss_index = 0
+        return self.next
 
     def _calculateVisibleNexts(self):
         if self.next <= 3:
@@ -118,29 +138,11 @@ class Threes(Model):
         for p in range(-1, 2):
             self.visible_nexts += [3 * 2 ** (p + modifier + factor)]
 
-    def _calculateNext(self):
-        random_list = list(range(21))
-        r = random.choice(random_list)
-        if r == 0 and self.highest_power > SPECIAL_DEMOTION:
-            p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))
-            self.next = 3 * 2 ** p
-            return self.next
-        self.next = self.poss_nexts[self.poss_index]
-        self.poss_index += 1
-        if self.poss_index >= len(self.poss_nexts):
-            random.shuffle(self.poss_nexts)
-            self.poss_index = 0
-        return self.next
-
-    def _join(self, el1, el2):
-        return el1 + el2
-
-    def _canJoin(self, el1, el2):
-        if el1 == el2 and el1 != 2 and el1 != 1:
-            return True
-        if min(el1, el2) == 1 and max(el1, el2) == 2:
-            return True
-        return False
+    @staticmethod
+    def _scoringFactor(element):
+        if element < 3:
+            return 0
+        return int(math.log(element / 3, 2) + 1)
 
     def score(self):
         result = 0
@@ -151,12 +153,6 @@ class Threes(Model):
                     result += 3 ** factor
         return result
 
-    @staticmethod
-    def _scoringFactor(element):
-        if element < 3:
-            return 0
-        return int(math.log(element / 3, 2) + 1)
-
     def data(self):
         result = np.array(self.board.flatten())
         nexts = self.visible_nexts
@@ -166,32 +162,5 @@ class Threes(Model):
         result = np.append([self.turn_counter, self.score()], result)
         return result
 
-
-if __name__ == '__main__':
-    game = Threes()
-    filename = getFilename()
-    printer(game)
-    moves_dict = {"w": MoveEnum.Up,
-                  "a": MoveEnum.Left,
-                  "s": MoveEnum.Down,
-                  "d": MoveEnum.Right}
-    while True:
-        any_move = False
-        for m in moves_dict.values():
-            any_move = any_move or game.canMove(m)
-        if not any_move:
-            break
-        w = input()
-        if w in moves_dict:
-            m = moves_dict[w]
-            if game.canMove(m):
-                if game.save_game:
-                    saveState(game, m.value, filename)
-                game.turn_counter += 1
-                game.makeMove(m)
-            else:
-                print("THE MOVE IS NOT VALID!")
-        else:
-            print("INVALID COMMAND")
-        print()
-        printer(game)
+    def stateInfo(self):
+        return State(self.board, self.visible_nexts, self.score())
