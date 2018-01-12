@@ -59,8 +59,8 @@ class Interface:
         self.model = model
 
         window_width = self.width * SINGLE_RECT_WIDTH + (self.width + 1) * RECT_DISTANCE
-        window_height = self.height * SINGLE_RECT_HEIGHT + (
-                                                               self.height + 1) * RECT_DISTANCE + ADDITIONAL_INFORMATION_TOP_SPACE
+        window_height = self.height * SINGLE_RECT_HEIGHT + (self.height + 1) * RECT_DISTANCE + \
+                                                                ADDITIONAL_INFORMATION_TOP_SPACE
         self.surface = pygame.Surface((window_width, window_height))
 
         self.block_surfaces = Surfaces()
@@ -68,8 +68,8 @@ class Interface:
     def _show_block(self, x, y, number):
         """
         Shows the block on position x,y with given number.
-        :param x: Horizontal position. From 0-model.width
-        :param y: Vertical position. From 0-model.height
+        :param x: Horizontal position. From 0 to model.width
+        :param y: Vertical position. From 0 to model.height
         :param number: The number to display
         """
         block_surface = self.block_surfaces.get_block(number)
@@ -78,22 +78,34 @@ class Interface:
                      RECT_DISTANCE + y * (SINGLE_RECT_HEIGHT + RECT_DISTANCE)
         self.surface.blit(block_surface, (draw_pos_x, draw_pos_y))
 
-    def redraw(self):
+    def _show_blocks(self):
         """
-        Redraws the interface. The interface is displayed on screen
+        Shows all the blocks from the model.
         """
-        self.surface.fill(BACKGROUND_COLOR)
         for y in range(self.height):
             for x in range(self.width):
                 self._show_block(x, y, self.model.stateInfo().board[y][x])
+
+    def _show_nexts(self):
+        """
+        Shows the nexts in the middle of ADDITIONAL_INFORMATION_TOP_SPACE.
+        """
         if self.model.stateInfo().visible_nexts:
             next_panel_width = len(self.model.stateInfo().visible_nexts) * (
-            SINGLE_RECT_WIDTH + RECT_DISTANCE) + RECT_DISTANCE
+                SINGLE_RECT_WIDTH + RECT_DISTANCE) + RECT_DISTANCE
             left_border_pos = self.surface.get_width() // 2 - next_panel_width // 2
             for i, e in enumerate(self.model.stateInfo().visible_nexts):
                 pos_x = left_border_pos + RECT_DISTANCE + i * (SINGLE_RECT_WIDTH + RECT_DISTANCE)
                 self.surface.blit(self.block_surfaces.get_block(e),
                                   (pos_x, ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
+
+    def redraw(self):
+        """
+        Redraws the interface. The interface can be displayed on screen later on.
+        """
+        self.surface.fill(BACKGROUND_COLOR)
+        self._show_blocks()
+        self._show_nexts()
 
 
 if __name__ == '__main__':
@@ -129,8 +141,6 @@ if __name__ == '__main__':
                 key_pressed = pygame.key.name(event.key)
                 if key_pressed == 'escape':
                     end = True
-
-                # TODO(violette): After changing save make sure this part is the same as the one in main of gameModel.py
                 if key_pressed not in pressed_keys or not pressed_keys[key_pressed]:
                     pressed_keys[key_pressed] = True
                     if key_pressed in keys_dict:
