@@ -48,8 +48,11 @@ def getFilename():
 
 def saveState(model_data, move, file):
     '''
-    This function saves the game state for future learning.
-    Current turn, state of the board, next value, current score and performed moved are saved.
+    Saves state of the game for future learning
+    :param model_data: numpy array containing current turn number, score, possible next fields, board
+    :param move: move made by the player for the current game state
+    :param file: file to save the data in
+    :return:
     '''
     row = np.append(model_data, [move])
     file.write(np.array2string(row, separator=',') + '\n')
@@ -58,14 +61,24 @@ def saveState(model_data, move, file):
 
 def read_saved_result(filename):
     '''
-    for future usage - read data from saved states
+    :param filename: name of the file to read the data from
+    :return:
     '''
     file = open(filename, 'r')
-    lines = file.read().splitlines()
-    for line in lines:
+    text = file.read()
+    index = 0
+    new_index = text.index('\n', index)
+    seed = int(text[index:new_index])
+    print(seed)
+    index = new_index+1
+    while index < len(text):
+        new_index = text.index(']', index) + 1
+        line = text[index:new_index]
         data = np.fromstring(line[1:-1], sep=',', dtype=np.int32)
         turn = data[0]
-        board = data[1:17]
-        next_value = data[17]
-        score = data[18]
-        print('{} {} {} {}'.format(turn, board, next_value, score))
+        score = data[1]
+        visible_moves = data[2:5]
+        board = data[5:21]
+        move = data[21]
+        print('{} {} {} {}'.format(turn, score, visible_moves, board, move))
+        index = new_index+1
