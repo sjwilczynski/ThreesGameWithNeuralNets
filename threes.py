@@ -32,8 +32,6 @@ class Threes(Model):
                 random.shuffle(self.poss_nexts)
                 self.poss_index = 0
 
-        self.board[3][3] = 96 * 2 * 2
-
     def _canMove(self, xs, ys, x_mod, y_mod):
         for y in ys:
             for x in xs:
@@ -122,7 +120,7 @@ class Threes(Model):
         return result
 
     def _getNext(self):
-        random_list = list(range(2))  # 21))
+        random_list = list(range(21))
         r = random.choice(random_list)
         if r == 0 and self.highest_power > SPECIAL_DEMOTION:
             p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))

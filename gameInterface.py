@@ -87,7 +87,6 @@ class Interface:
             for x in range(self.width):
                 self._show_block(x, y, self.model.stateInfo().board[y][x])
         # TODO(shrumo): After model.next will be depreceted, change the thing to show the next properly.
-        print("\t", self.model.stateInfo().visible_nexts)
         # self.surface.blit(self.block_surfaces.get_block(self.model.next),
         #                  (self.surface.get_width() // 2 - SINGLE_RECT_WIDTH // 2,
         #                   ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
@@ -137,7 +136,6 @@ if __name__ == '__main__':
                             game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()
-                            print(game.score())
             if event.type == pygame.KEYUP:
                 key_pressed = pygame.key.name(event.key)
                 pressed_keys[key_pressed] = False
