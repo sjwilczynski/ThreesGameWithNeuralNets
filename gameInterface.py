@@ -1,6 +1,9 @@
 import pygame  # In order to install pygame pip3 install pygame should be enough
+#In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
 from threes import *
+import time
+import random
 
 SINGLE_RECT_WIDTH = 80
 SINGLE_RECT_HEIGHT = 100
@@ -112,8 +115,13 @@ if __name__ == '__main__':
     pygame.init()
     pygame.font.init()
     pygame.display.set_caption('threes')
+    seed = int(time.time())
+    random.seed(seed)
     game = Threes()
     filename = getFilename()
+    file = open(filename, 'a+')
+    file.write(str(seed) + '\n')
+    file.flush()
     interface = Interface(game)
     interface.redraw()
     end = False
@@ -147,7 +155,7 @@ if __name__ == '__main__':
                         m = keys_dict[key_pressed]
                         if game.canMove(m):
                             if game.save_game:
-                                saveState(game, m.value, filename)
+                                saveState(game.data(), m.value, file)
                             game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()
@@ -156,3 +164,4 @@ if __name__ == '__main__':
                 pressed_keys[key_pressed] = False
         screen.blit(interface.surface, (0, 0))
         pygame.display.flip()
+    file.close()

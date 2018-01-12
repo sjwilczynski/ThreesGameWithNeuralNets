@@ -46,16 +46,14 @@ def getFilename():
     return "game_results/" + time.strftime("%Y%m%d-%H%M%S")
 
 
-def saveState(model, move, filename):
+def saveState(model_data, move, file):
     '''
     This function saves the game state for future learning.
     Current turn, state of the board, next value, current score and performed moved are saved.
     '''
-    file = open(filename, 'a+')
-    row = model.data()
-    row = np.append([move], row)
+    row = np.append(model_data, [move])
     file.write(np.array2string(row, separator=',') + '\n')
-    file.close()
+    file.flush()
 
 
 def read_saved_result(filename):

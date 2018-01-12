@@ -1,8 +1,10 @@
 from threes import *
+import random
+import time
 
 
 def printer(curr_game):
-    board = curr_game.stateInfo()
+    board = curr_game.stateInfo().board
     for ys in board:
         for el in ys:
             x = "."
@@ -17,8 +19,13 @@ def put_piece(t, x, y, el):
 
 
 if __name__ == '__main__':
+    seed = int(time.time())
+    random.seed(seed)
     game = Threes()
     filename = getFilename()
+    file = open(filename, 'a+')
+    file.write(str(seed) + '\n')
+    file.flush()
     printer(game)
     moves_dict = {"w": MoveEnum.Up,
                   "a": MoveEnum.Left,
@@ -35,7 +42,7 @@ if __name__ == '__main__':
             m = moves_dict[w]
             if game.canMove(m):
                 if game.save_game:
-                    saveState(game, m.value, filename)
+                    saveState(game.data(), m.value, file)
                 game.turn_counter += 1
                 game.makeMove(m)
             else:
@@ -44,3 +51,4 @@ if __name__ == '__main__':
             print("INVALID COMMAND")
         print()
         printer(game)
+    file.close()
