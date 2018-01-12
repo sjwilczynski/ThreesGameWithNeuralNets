@@ -5,7 +5,13 @@ from threes import *
 SINGLE_RECT_WIDTH = 80
 SINGLE_RECT_HEIGHT = 100
 RECT_DISTANCE = 20
-ADDITIONAL_INFORMATION_TOP_SPACE = 200
+ADDITIONAL_INFORMATION_TOP_SPACE = 170
+
+SCORE_SPACE_WIDTH = 150
+SCORE_SPACE_HEIGHT = 80
+
+SCORE_POS_X = 10
+SCORE_POS_Y = 20
 
 ONE_COLOR = (114, 202, 242)
 TWO_COLOR = (241, 103, 128)
@@ -18,7 +24,7 @@ FONT_SIZE = 34
 FONT = 'Arial'
 
 
-class Surfaces:
+class Renderer:
     def __init__(self):
         self.surfaces = {}
         self.font = pygame.font.SysFont(FONT, FONT_SIZE, bold=True)
@@ -51,6 +57,9 @@ class Surfaces:
                                           SINGLE_RECT_HEIGHT // 2 - text.get_height() // 2))
         return self.surfaces[number]
 
+    def get_text(self, number):
+        return self.font.render(str(number), 1, BLACK_COLOR)
+
 
 class Interface:
     def __init__(self, model):
@@ -63,7 +72,7 @@ class Interface:
                                                                 ADDITIONAL_INFORMATION_TOP_SPACE
         self.surface = pygame.Surface((window_width, window_height))
 
-        self.block_surfaces = Surfaces()
+        self.renderer = Renderer()
 
     def _show_block(self, x, y, number):
         """
@@ -72,7 +81,7 @@ class Interface:
         :param y: Vertical position. From 0 to model.height
         :param number: The number to display
         """
-        block_surface = self.block_surfaces.get_block(number)
+        block_surface = self.renderer.get_block(number)
         draw_pos_x = RECT_DISTANCE + x * (SINGLE_RECT_WIDTH + RECT_DISTANCE)
         draw_pos_y = ADDITIONAL_INFORMATION_TOP_SPACE + \
                      RECT_DISTANCE + y * (SINGLE_RECT_HEIGHT + RECT_DISTANCE)
@@ -96,8 +105,19 @@ class Interface:
             left_border_pos = self.surface.get_width() // 2 - next_panel_width // 2
             for i, e in enumerate(self.model.stateInfo().visible_nexts):
                 pos_x = left_border_pos + RECT_DISTANCE + i * (SINGLE_RECT_WIDTH + RECT_DISTANCE)
-                self.surface.blit(self.block_surfaces.get_block(e),
+                self.surface.blit(self.renderer.get_block(e),
                                   (pos_x, ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
+
+    def _show_score(self):
+        score = self.model.stateInfo().score
+        if score:
+            text = self.renderer.get_text(score)
+            pygame.draw.rect(self.surface,EMPTY_COLOR,(SCORE_POS_X, SCORE_POS_Y, SCORE_SPACE_WIDTH, SCORE_SPACE_HEIGHT))
+            text_pos_x = SCORE_POS_X + SCORE_SPACE_WIDTH // 2 - text.get_width() // 2
+            text_pos_y = SCORE_POS_Y + SCORE_SPACE_HEIGHT // 2 - text.get_height() // 2
+            self.surface.blit(text, (text_pos_x,text_pos_y))
+
+
 
     def redraw(self):
         """
@@ -106,6 +126,7 @@ class Interface:
         self.surface.fill(BACKGROUND_COLOR)
         self._show_blocks()
         self._show_nexts()
+        self._show_score()
 
 
 if __name__ == '__main__':
