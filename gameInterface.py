@@ -86,10 +86,14 @@ class Interface:
         for y in range(self.height):
             for x in range(self.width):
                 self._show_block(x, y, self.model.stateInfo().board[y][x])
-        # TODO(shrumo): After model.next will be depreceted, change the thing to show the next properly.
-        # self.surface.blit(self.block_surfaces.get_block(self.model.next),
-        #                  (self.surface.get_width() // 2 - SINGLE_RECT_WIDTH // 2,
-        #                   ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
+        if self.model.stateInfo().visible_nexts:
+            next_panel_width = len(self.model.stateInfo().visible_nexts) * (
+            SINGLE_RECT_WIDTH + RECT_DISTANCE) + RECT_DISTANCE
+            left_border_pos = self.surface.get_width() // 2 - next_panel_width // 2
+            for i, e in enumerate(self.model.stateInfo().visible_nexts):
+                pos_x = left_border_pos + RECT_DISTANCE + i * (SINGLE_RECT_WIDTH + RECT_DISTANCE)
+                self.surface.blit(self.block_surfaces.get_block(e),
+                                  (pos_x, ADDITIONAL_INFORMATION_TOP_SPACE // 2 - SINGLE_RECT_HEIGHT // 2))
 
 
 if __name__ == '__main__':
