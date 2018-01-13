@@ -22,10 +22,12 @@ if __name__ == '__main__':
     seed = int(time.time())
     random.seed(seed)
     game = Threes()
-    filename = getFilename()
-    file = open(filename, 'a+')
-    file.write(str(seed) + '\n')
-    file.flush()
+    file = ''
+    if game.save_game:
+        filename = getFilename()
+        file = open(filename, 'a+')
+        file.write(str(seed) + '\n')
+        file.flush()
     printer(game)
     moves_dict = {"w": MoveEnum.Up,
                   "a": MoveEnum.Left,
@@ -51,4 +53,5 @@ if __name__ == '__main__':
             print("INVALID COMMAND")
         print()
         printer(game)
-    file.close()
+    if game.save_game:
+        file.close()

@@ -140,10 +140,12 @@ if __name__ == '__main__':
     seed = int(time.time())
     random.seed(seed)
     game = Threes()
-    filename = getFilename()
-    file = open(filename, 'a+')
-    file.write(str(seed) + '\n')
-    file.flush()
+    file = ''
+    if game.save_game:
+        filename = getFilename()
+        file = open(filename, 'a+')
+        file.write(str(seed) + '\n')
+        file.flush()
     interface = Interface(game)
     interface.redraw()
     end = False
@@ -186,4 +188,5 @@ if __name__ == '__main__':
                 pressed_keys[key_pressed] = False
         screen.blit(interface.surface, (0, 0))
         pygame.display.flip()
-    file.close()
+    if game.save_game:
+        file.close()
