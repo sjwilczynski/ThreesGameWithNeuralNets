@@ -70,7 +70,7 @@ def read_saved_result(filename):
     new_index = text.index('\n', index)
     seed = int(text[index:new_index])
     print(seed)
-    index = new_index+1
+    index = new_index + 1
     while index < len(text):
         new_index = text.index(']', index) + 1
         line = text[index:new_index]
@@ -81,4 +81,4 @@ def read_saved_result(filename):
         board = data[5:21]
         move = data[21]
         print('{} {} {} {}'.format(turn, score, visible_moves, board, move))
-        index = new_index+1
+        index = new_index + 1

@@ -1,5 +1,5 @@
 import pygame  # In order to install pygame pip3 install pygame should be enough
-#In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
+# In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
 from threes import *
 import time

@@ -4,7 +4,7 @@ import time
 
 
 def printer(curr_game):
-    board = curr_game.stateInfo().board
+    board = curr_game.board
     for ys in board:
         for el in ys:
             x = "."
@@ -39,7 +39,7 @@ if __name__ == '__main__':
             any_move = any_move or game.canMove(m)
         if not any_move:
             break
-        w = input()
+        w = input("Choose move\n")
         if w in moves_dict:
             m = moves_dict[w]
             if game.canMove(m):
