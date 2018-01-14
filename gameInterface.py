@@ -113,7 +113,7 @@ class Interface:
         Shows the score on the interface.
         """
         score = self.model.stateInfo().score
-        if score:
+        if score is not None:
             text = self.renderer.get_text(score)
             pos_x = self.surface.get_width() // 2 - SCORE_SPACE_WIDTH // 2
             pos_y = RECT_DISTANCE

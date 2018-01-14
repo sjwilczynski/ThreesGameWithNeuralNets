@@ -26,9 +26,11 @@ def print_row(row):
         print("{:>4}".format(x), end=" ")
 
 
-def is_any_move_valid(g1, g2):
+def is_any_move_valid(g1, g2,dict=None):
+    if not dict:
+        dict = moves_dict
     any_move = False
-    for m in moves_dict.values():
+    for m in dict.values():
         any_move = any_move or g1.canMove(m) or g2.canMove(m)
     return any_move
 
