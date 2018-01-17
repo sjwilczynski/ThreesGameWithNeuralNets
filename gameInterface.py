@@ -1,17 +1,16 @@
 import pygame  # In order to install pygame pip3 install pygame should be enough
-# In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
 from threes import *
-import time
-import random
+
+# In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
 SINGLE_RECT_WIDTH = 80
 SINGLE_RECT_HEIGHT = 100
 RECT_DISTANCE = 20
-ADDITIONAL_INFORMATION_TOP_SPACE = 240
+ADDITIONAL_INFORMATION_TOP_SPACE = 200
 
 SCORE_SPACE_WIDTH = 200
-SCORE_SPACE_HEIGHT = 80
+SCORE_SPACE_HEIGHT = 50
 
 ONE_COLOR = (114, 202, 242)
 TWO_COLOR = (241, 103, 128)

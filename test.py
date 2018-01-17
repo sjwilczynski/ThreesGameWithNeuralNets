@@ -1,10 +1,8 @@
 from threes import *
-import random
-import time
 
 
 def printer(curr_game):
-    board = curr_game.board
+    board = curr_game.stateInfo().board
     for ys in board:
         for el in ys:
             x = "."
