@@ -19,6 +19,7 @@ NUMBER_COLOR = (255, 255, 255)
 EMPTY_COLOR = (187, 217, 217)
 BLACK_COLOR = (0, 0, 0)
 BACKGROUND_COLOR = (207, 231, 224)
+TURN_INDICATOR_COLOR = (63, 220, 84)
 
 FONT_SIZE = 34
 FONT = 'Arial'
@@ -123,7 +124,13 @@ class Interface:
             text_pos_y = pos_y + SCORE_SPACE_HEIGHT // 2 - text.get_height() // 2
             self.surface.blit(text, (text_pos_x, text_pos_y))
 
-    def redraw(self):
+    def _show_turn_indicator(self):
+        radius = self.surface.get_width() // 10
+        pos_x = (self.surface.get_width() // 2 - SCORE_SPACE_WIDTH // 2) // 2
+        pos_y = RECT_DISTANCE + SCORE_SPACE_HEIGHT // 2
+        pygame.draw.circle(self.surface, TURN_INDICATOR_COLOR, (pos_x, pos_y), radius)
+
+    def redraw(self, my_turn=False):
         """
         Redraws the interface. The interface can be displayed on screen later on.
         """
@@ -131,6 +138,8 @@ class Interface:
         self._show_blocks()
         self._show_nexts()
         self._show_score()
+        if my_turn:
+            self._show_turn_indicator()
 
 
 if __name__ == '__main__':

@@ -65,7 +65,6 @@ if __name__ == '__main__':
         user_input = input("Choose move\n")
         if user_input in valid_inputs:
             ind = valid_inputs.index(user_input)
-            print(ind)
             i = int(ind > 3)
             move = moves_dict[valid_inputs[ind - 4] if i else valid_inputs[ind]]
             if games[i].canMove(move):
