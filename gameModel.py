@@ -68,16 +68,15 @@ def getFilename():
     return "game_results/" + time.strftime("%Y%m%d-%H%M%S")
 
 
-def saveState(model_data, move, file):
+def saveState(model, move, file):
     '''
     Saves state of the game for future learning
-    :param model_data: numpy array containing current turn number, score, possible next fields, board
+    :param model: current Model object
     :param move: move made by the player for the current game state
     :param file: file to save the data in
     :return:
     '''
-    row = np.append(model_data, [move])
-    file.write(np.array2string(row, separator=',') + '\n')
+    file.write(np.array2string(model.getTransitionData(move), separator=',') + '\n')
     file.flush()
 
 
