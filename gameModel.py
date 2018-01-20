@@ -47,10 +47,13 @@ class Model:
     def score(self):
         raise NotImplemented
 
-    def getTransitionData(self, move):
-        game = copy.deepcopy(self)
+    def getTransitionData(self, move, make_move=False):
+        game = self
+        score = self.score()
+        if not make_move:
+            game = copy.deepcopy(self)
         game.makeMove(move)
-        result = np.append(self.data(), [move.value, game.score() - self.score()])
+        result = np.append(self.data(), [move.value, game.score() - score])
         result = np.append(result, game.data())
         return result
 
