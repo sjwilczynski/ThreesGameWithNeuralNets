@@ -1,11 +1,12 @@
 from __future__ import absolute_import
+
 import random
 
 from gameModel import *
 
 
 class G2048(Model):
-    def __init__(self, save_game=True):
+    def __init__(self, save_game=True, data=None):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
@@ -13,6 +14,14 @@ class G2048(Model):
         self._initBoard()
         self.turn_counter = 0
         self.score = 0
+        if data:
+            i, j = 0, 0
+            for elem in data:
+                self.board[j][i] = elem
+                i += 1
+                if i >= self.width:
+                    j += 1
+                    i = 0
 
     def _initBoard(self):
         fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]
