@@ -96,5 +96,8 @@ class G2048(Model):
         result = np.append([self.turn_counter, self.score], result)
         return result
 
+    def score(self):
+        return self.score
+
     def stateInfo(self):
         return State(self.board, score=self.score)

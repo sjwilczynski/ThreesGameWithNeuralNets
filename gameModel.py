@@ -15,6 +15,11 @@ class MoveEnum(enum.Enum):
     Down = 3
 
 
+class GameEnum(enum.Enum):
+    Threes = 0
+    G2048 = 1
+
+
 class State:
     def __init__(self, board, visible_nexts=None, score=None):
         self.board = board
@@ -29,10 +34,16 @@ class Model:
     def canMove(self, move):
         raise NotImplemented
 
+    def getPossibleMoves(self):
+        return list(filter(self.canMove, list(MoveEnum)))
+
     def makeMove(self, move):
         raise NotImplemented
 
     def stateInfo(self):
+        raise NotImplemented
+
+    def score(self):
         raise NotImplemented
 
     def data(self):
