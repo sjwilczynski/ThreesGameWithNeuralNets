@@ -72,4 +72,3 @@ if __name__ == u'__main__':
             screen.blit(interface.surface, (x, 0))
             x += interface.surface.get_width()
         pygame.display.flip()
-    # TODO Don't close the window immediately after players are out of moves
