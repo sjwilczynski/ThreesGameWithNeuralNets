@@ -79,7 +79,7 @@ def saveState(model, move, file):
     :param file: file to save the data in
     :return:
     '''
-    file.write(np.array2string(model.getTransitionData(move), separator=u',') + u'\n')
+    file.write(','.join([str(x) for x in model.getTransitionData(move)]) + u'\n')
     file.flush()
 
 
