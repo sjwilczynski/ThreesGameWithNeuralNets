@@ -43,7 +43,7 @@ class Threes(Model):
                 self.poss_nexts = np.append(self.poss_nexts, [i + 1 for j in xrange(4 - loaded[i])])
 
     def _parseNext(self, nexts):
-        self.visible_nexts = list(ifilter(lambda x: x != -1, nexts))
+        self.visible_nexts = list(ifilter(lambda x: x != 0, nexts))
         self.next = random.choice(self.visible_nexts)
 
     def _initBoard(self):
@@ -179,12 +179,14 @@ class Threes(Model):
                     result += 3 ** factor
         return result
 
-    def data(self):
+    def data(self, normalize=False):
         result = np.array(self.board.flatten())
         nexts = self.visible_nexts
         for i in xrange(3 - len(nexts)):
-            nexts += [-1]
+            nexts += [0]
         result = np.append(result, nexts)
+        if normalize:
+            result = result / (3 * 2 ** 12)
         return result
 
     def stateInfo(self):
