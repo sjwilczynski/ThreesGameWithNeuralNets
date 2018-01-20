@@ -51,17 +51,23 @@ class Model(object):
     def score(self):
         raise NotImplemented
 
-    def getTransitionData(self, move, make_move=False):
+    def getTransitionData(self, move, make_move=False, normalize=False):
         game = self
         score = self.score()
         if not make_move:
             game = copy.deepcopy(self)
         game.makeMove(move)
-        result = np.append(self.data(), [move.value, game.score() - score])
-        result = np.append(result, game.data())
+        move_val = move.value
+        if normalize:
+            move_val /= 4
+        score = game.score() - score
+        if normalize:
+            score = score / (16 * 3 ** 12)
+        result = np.append(self.data(normalize), [move_val, score])
+        result = np.append(result, game.data(normalize))
         return result
 
-    def data(self):
+    def data(self, normalize=False):
         u"""
         This method should return all data about current state of the model used by neural network.
         """

@@ -1,8 +1,6 @@
-from __future__ import division
 from __future__ import absolute_import
-import copy
+from __future__ import division
 
-from g2048 import *
 from test import *
 
 game = Threes()
@@ -84,7 +82,7 @@ def best_move(model, moves):
 if __name__ == u'__main__':
     seed = int(time.time())
     random.seed(seed)
-    game = G2048()
+    game = Threes()
     printer(game)
     moves_dict = {u"w": MoveEnum.Up,
                   u"a": MoveEnum.Left,
@@ -97,7 +95,6 @@ if __name__ == u'__main__':
         if not any_move:
             break
         m = best_move(game, moves_dict.values())
-        game.turn_counter += 1
         game.makeMove(m)
         print
         printer(game)

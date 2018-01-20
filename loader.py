@@ -26,11 +26,11 @@ class Loader(object):
         else:
             best_result = float("-inf")
             for pos_move in self.game_state.getPossibleMoves():
-                res = model.Q(np.array([np.append(self.game_state.data(), [pos_move.value])]))[0]
+                res = model.Q(np.array([np.append(self.game_state.data(True), [pos_move.value / 4])]))[0]
                 if res >= best_result:
                     best_result = res
                     move = pos_move
-        return self.game_state.getTransitionData(move, True)
+        return self.game_state.getTransitionData(move, True, True)
 
 
 if __name__ == u'__main__':
@@ -40,7 +40,5 @@ if __name__ == u'__main__':
 
 
     loa = Loader()
-    print
-    random.choice(loa.game_state.getPossibleMoves())
-    print
-    loa.get(f())
+    print random.choice(loa.game_state.getPossibleMoves())
+    print loa.get(f())
