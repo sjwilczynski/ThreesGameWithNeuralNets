@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 from random import *
 
 from threes import *
 
 
-class loader:
+class loader(object):
     def __init__(self, game=Threes, epsilon=0.01):
         self.game = game
         self.game_state = self.game()
@@ -11,7 +12,7 @@ class loader:
 
     def get(self, model, batch_size=20):
         self.replay_memory = []
-        for i in range(batch_size):
+        for i in xrange(batch_size):
             self.replay_memory += [self._getOneBatch(model)]
         return np.array(self.replay_memory)
 
@@ -31,10 +32,10 @@ class loader:
         return self.game_state.getTransitionData(move, True)
 
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     def f(a):
         return a[0][-1]
 
 
     loa = loader()
-    print(loa.get(f, 20))
+    print loa.get(f, 20)

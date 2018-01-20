@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import numpy as np
 import torch
 from torch.autograd import Variable
@@ -16,8 +17,8 @@ def train(model, data_loaders, optimizer, num_epochs=100, log_every=100, verbose
     iter_ = 0
     epoch = 0
     if verbose:
-        print('Training the model!')
-        print('Interrupt at any time to get current model')
+        print u'Training the model!'
+        print u'Interrupt at any time to get current model'
     try:
         while epoch < num_epochs:
             epoch += 1
@@ -40,14 +41,14 @@ def train(model, data_loaders, optimizer, num_epochs=100, log_every=100, verbose
                 optimizer.step()
 
                 if iter_ % log_every == 0 and verbose:
-                    print("Minibatch {0: >6}  | loss {1: >5.2f} ".format(iter_, loss.data[0]))
+                    print u"Minibatch {0: >6}  | loss {1: >5.2f} ".format(iter_, loss.data[0])
 
     except KeyboardInterrupt:
         pass
     # TODO Save model parameters
 
 
-class QLearningNet:
+class QLearningNet(object):
     def __init__(self, network, criterion):
         self.network = network
         self.criterion = criterion

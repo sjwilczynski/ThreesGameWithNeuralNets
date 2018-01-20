@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import absolute_import
 import math
 import random
 
@@ -6,13 +8,13 @@ from gameModel import *
 
 class Threes(Model):
     def __init__(self, save_game=True):
-        super(Threes, self).__init__(save_game)
+        Model.__init__(self, save_game)
         self.width = WIDTH
         self.height = HEIGHT
-        self.board = np.array([[0 for _ in range(self.width)] for _ in range(self.height)], dtype=np.int32)
+        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
         self.highest = 3
         self.highest_power = 0
-        self.poss_nexts = np.array([(i % 3) + 1 for i in range(12)], dtype=np.int32)
+        self.poss_nexts = np.array([(i % 3) + 1 for i in xrange(12)], dtype=np.int32)
         random.shuffle(self.poss_nexts)
         self.poss_index = 0
         self._initBoard()
@@ -21,7 +23,7 @@ class Threes(Model):
         self.turn_counter = 0
 
     def _initBoard(self):
-        fields = [(x, y) for x in range(self.width) for y in range(self.height)]
+        fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]
         random.shuffle(fields)
         for x, y in fields[:9]:
             self.board[y][x] = self.poss_nexts[self.poss_index]
@@ -40,8 +42,8 @@ class Threes(Model):
         return False
 
     def canMove(self, move):
-        xs = [i for i in range(self.width)]
-        ys = [i for i in range(self.height)]
+        xs = [i for i in xrange(self.width)]
+        ys = [i for i in xrange(self.height)]
         if move == MoveEnum.Left:
             return self._canMove(xs[1:], ys, -1, 0)
         if move == MoveEnum.Up:
@@ -71,8 +73,8 @@ class Threes(Model):
         return list(x_moved), list(y_moved)
 
     def makeMove(self, move):
-        xs = [i for i in range(self.width)]
-        ys = [i for i in range(self.height)]
+        xs = [i for i in xrange(self.width)]
+        ys = [i for i in xrange(self.height)]
         if move == MoveEnum.Left:
             _, y_moved = self._makeMove(xs[1:], ys, -1, 0)
             self.board[random.choice(y_moved)][self.width - 1] = self.next
@@ -103,10 +105,10 @@ class Threes(Model):
         return False
 
     def _calculateNext(self):
-        random_list = list(range(21))
+        random_list = xrange(21)
         r = random.choice(random_list)
         if r == 0 and self.highest_power > SPECIAL_DEMOTION:
-            p = random.choice(range(1, 1 + self.highest_power - SPECIAL_DEMOTION))
+            p = random.choice(xrange(1, 1 + self.highest_power - SPECIAL_DEMOTION))
             self.next = 3 * 2 ** p
             return self.next
         self.next = self.poss_nexts[self.poss_index]
@@ -122,7 +124,7 @@ class Threes(Model):
             return
         if self.highest_power - SPECIAL_DEMOTION < 3:
             self.visible_nexts = []
-            for p in range(1, self.highest_power - SPECIAL_DEMOTION + 1):
+            for p in xrange(1, self.highest_power - SPECIAL_DEMOTION + 1):
                 self.visible_nexts += [3 * (2 ** p)]
             return
         factor = Threes._scoringFactor(self.next) - 1
@@ -135,7 +137,7 @@ class Threes(Model):
             poss += [0]  # 12 24 48
         modifier = random.choice(poss)
         self.visible_nexts = []
-        for p in range(-1, 2):
+        for p in xrange(-1, 2):
             self.visible_nexts += [3 * 2 ** (p + modifier + factor)]
 
     @staticmethod
@@ -156,7 +158,7 @@ class Threes(Model):
     def data(self):
         result = np.array(self.board.flatten())
         nexts = self.visible_nexts
-        for i in range(3 - len(nexts)):
+        for i in xrange(3 - len(nexts)):
             nexts += [-1]
         result = np.append(result, nexts)
         return result

@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import absolute_import
 import copy
 
 from g2048 import *
@@ -7,9 +9,9 @@ game = Threes()
 printer(game)
 game2 = copy.deepcopy(game)
 game2.makeMove(MoveEnum.Up)
-print()
+print
 printer(game)
-print()
+print
 printer(game2)
 
 
@@ -79,15 +81,15 @@ def best_move(model, moves):
     return result
 
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     seed = int(time.time())
     random.seed(seed)
     game = G2048()
     printer(game)
-    moves_dict = {"w": MoveEnum.Up,
-                  "a": MoveEnum.Left,
-                  "s": MoveEnum.Down,
-                  "d": MoveEnum.Right}
+    moves_dict = {u"w": MoveEnum.Up,
+                  u"a": MoveEnum.Left,
+                  u"s": MoveEnum.Down,
+                  u"d": MoveEnum.Right}
     while True:
         any_move = False
         for m in moves_dict.values():
@@ -97,6 +99,6 @@ if __name__ == '__main__':
         m = best_move(game, moves_dict.values())
         game.turn_counter += 1
         game.makeMove(m)
-        print()
+        print
         printer(game)
-        print(game.stateInfo().score)
+        print game.stateInfo().score

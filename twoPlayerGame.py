@@ -1,29 +1,31 @@
+from __future__ import absolute_import
 import threes
 import g2048
 from gameModel import *
 import random
 import time
+import sys
 
 
 def printer(curr_games):
     board1 = curr_games[0].board
     board2 = curr_games[1].board
     size = board1.shape[0]
-    for j in range(size):
+    for j in xrange(size):
         r1 = board1[j]
         r2 = board2[j]
         print_row(r1)
-        print("", end=" | ")
+        print u"",; sys.stdout.write(u" | ")
         print_row(r2)
-        print("")
+        print u""
 
 
 def print_row(row):
     for el in row:
-        x = "."
+        x = u"."
         if el != 0:
             x = el
-        print("{:>4}".format(x), end=" ")
+        print u"{:>4}".format(x),
 
 
 def is_any_move_valid(g1, g2,dict=None):
@@ -35,34 +37,34 @@ def is_any_move_valid(g1, g2,dict=None):
     return any_move
 
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     games = []
     correct = False
     while not correct:
-        game_type = input('Choose game type\n')
-        if game_type == 'threes':
+        game_type = raw_input(u'Choose game type\n')
+        if game_type == u'threes':
             games = [threes.Threes(save_game=False), threes.Threes(save_game=False)]
             correct = True
-        elif game_type == '2048':
+        elif game_type == u'2048':
             games = [g2048.G2048(save_game=False), g2048.G2048(save_game=False)]
             correct = True
         else:
-            print('You passed invalid game type - try again')
+            print u'You passed invalid game type - try again'
 
     seed = int(time.time())
     random.seed(seed)
-    moves_dict = {"w": MoveEnum.Up,
-                  "a": MoveEnum.Left,
-                  "s": MoveEnum.Down,
-                  "d": MoveEnum.Right}
-    valid_inputs = ['w', 'a', 's', 'd', 'i', 'j', 'k', 'l']
+    moves_dict = {u"w": MoveEnum.Up,
+                  u"a": MoveEnum.Left,
+                  u"s": MoveEnum.Down,
+                  u"d": MoveEnum.Right}
+    valid_inputs = [u'w', u'a', u's', u'd', u'i', u'j', u'k', u'l']
     # to make move in player1's board use WSAD and in player2's board use IKJL
-    players = ['Player1', 'Player2']
+    players = [u'Player1', u'Player2']
     curr_player = 0
     printer(games)
-    print("It's {}'s turn".format(players[curr_player]))
+    print u"It's {}'s turn".format(players[curr_player])
     while is_any_move_valid(games[0], games[1]):
-        user_input = input("Choose move\n")
+        user_input = raw_input(u"Choose move\n")
         if user_input in valid_inputs:
             ind = valid_inputs.index(user_input)
             i = int(ind > 3)
@@ -72,11 +74,11 @@ if __name__ == '__main__':
                 games[i].makeMove(move)
                 curr_player = (curr_player + 1) % 2
             else:
-                print("THE MOVE IS NOT VALID!")
+                print u"THE MOVE IS NOT VALID!"
         else:
-            print("INVALID COMMAND")
-        print()
+            print u"INVALID COMMAND"
+        print
         printer(games)
-        print("It's {}'s turn".format(players[curr_player]))
-    print('Game has ended. The scores are:')
-    print('Player1 - {}, Player2 - {}'.format(games[0].stateInfo().score, games[1].stateInfo().score))
+        print u"It's {}'s turn".format(players[curr_player])
+    print u'Game has ended. The scores are:'
+    print u'Player1 - {}, Player2 - {}'.format(games[0].stateInfo().score, games[1].stateInfo().score)

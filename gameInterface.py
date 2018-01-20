@@ -1,6 +1,8 @@
+from __future__ import absolute_import
 import pygame  # In order to install pygame pip3 install pygame should be enough
 
 from threes import *
+from io import open
 
 # In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
@@ -21,16 +23,16 @@ BACKGROUND_COLOR = (207, 231, 224)
 TURN_INDICATOR_COLOR = (63, 220, 84)
 
 FONT_SIZE = 34
-FONT = 'Arial'
+FONT = u'Arial'
 
 
-class Renderer:
+class Renderer(object):
     def __init__(self):
         self.surfaces = {}
         self.font = pygame.font.SysFont(FONT, FONT_SIZE, bold=True)
 
     def get_block(self, number):
-        """
+        u"""
         Handles creation of blocks in the interface. Makes sure each block is created only once.
         :param number: The number identifying the block.
         :return: The surface to display.
@@ -42,26 +44,26 @@ class Renderer:
         text = None
         if number == 0:
             self.surfaces[number].fill(EMPTY_COLOR)
-            text = self.font.render("", 0, EMPTY_COLOR)
+            text = self.font.render(u"", 0, EMPTY_COLOR)
         elif number == 1:
             self.surfaces[number].fill(ONE_COLOR)
-            text = self.font.render(str(number), 1, NUMBER_COLOR)
+            text = self.font.render(unicode(number), 1, NUMBER_COLOR)
         elif number == 2:
             self.surfaces[number].fill(TWO_COLOR)
-            text = self.font.render(str(number), 1, NUMBER_COLOR)
+            text = self.font.render(unicode(number), 1, NUMBER_COLOR)
         else:
             self.surfaces[number].fill(NUMBER_COLOR)
-            text = self.font.render(str(number), 1, BLACK_COLOR)
+            text = self.font.render(unicode(number), 1, BLACK_COLOR)
 
         self.surfaces[number].blit(text, (SINGLE_RECT_WIDTH // 2 - text.get_width() // 2,
                                           SINGLE_RECT_HEIGHT // 2 - text.get_height() // 2))
         return self.surfaces[number]
 
     def get_text(self, number):
-        return self.font.render(str(number), 1, BLACK_COLOR)
+        return self.font.render(unicode(number), 1, BLACK_COLOR)
 
 
-class Interface:
+class Interface(object):
     def __init__(self, model):
         self.width = model.width
         self.height = model.height
@@ -75,7 +77,7 @@ class Interface:
         self.renderer = Renderer()
 
     def _show_block(self, x, y, number):
-        """
+        u"""
         Shows the block on position x,y with given number.
         :param x: Horizontal position. From 0 to model.width
         :param y: Vertical position. From 0 to model.height
@@ -88,15 +90,15 @@ class Interface:
         self.surface.blit(block_surface, (draw_pos_x, draw_pos_y))
 
     def _show_blocks(self):
-        """
+        u"""
         Shows all the blocks from the model.
         """
-        for y in range(self.height):
-            for x in range(self.width):
+        for y in xrange(self.height):
+            for x in xrange(self.width):
                 self._show_block(x, y, self.model.stateInfo().board[y][x])
 
     def _show_nexts(self):
-        """
+        u"""
         Shows the nexts on the interface.
         """
         if self.model.stateInfo().visible_nexts:
@@ -109,7 +111,7 @@ class Interface:
                                   (pos_x, ADDITIONAL_INFORMATION_TOP_SPACE - SINGLE_RECT_HEIGHT - RECT_DISTANCE))
 
     def _show_score(self):
-        """
+        u"""
         Shows the score on the interface.
         """
         score = self.model.stateInfo().score
@@ -130,7 +132,7 @@ class Interface:
         pygame.draw.circle(self.surface, TURN_INDICATOR_COLOR, (pos_x, pos_y), radius)
 
     def redraw(self, my_turn=False):
-        """
+        u"""
         Redraws the interface. The interface can be displayed on screen later on.
         """
         self.surface.fill(BACKGROUND_COLOR)
@@ -141,18 +143,18 @@ class Interface:
             self._show_turn_indicator()
 
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     pygame.init()
     pygame.font.init()
-    pygame.display.set_caption('threes')
+    pygame.display.set_caption(u'threes')
     seed = int(time.time())
     random.seed(seed)
     game = Threes()
-    file = ''
+    file = u''
     if game.save_game:
         filename = getFilename()
-        file = open(filename, 'a+')
-        file.write(str(seed) + '\n')
+        file = open(filename, u'a+')
+        file.write(unicode(seed) + u'\n')
         file.flush()
     interface = Interface(game)
     interface.redraw()
@@ -161,14 +163,14 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((interface.surface.get_width(), interface.surface.get_height()))
 
     keys_dict = {
-        "w": MoveEnum.Up,
-        "a": MoveEnum.Left,
-        "s": MoveEnum.Down,
-        "d": MoveEnum.Right,
-        "up": MoveEnum.Up,
-        "down": MoveEnum.Down,
-        "left": MoveEnum.Left,
-        "right": MoveEnum.Right
+        u"w": MoveEnum.Up,
+        u"a": MoveEnum.Left,
+        u"s": MoveEnum.Down,
+        u"d": MoveEnum.Right,
+        u"up": MoveEnum.Up,
+        u"down": MoveEnum.Down,
+        u"left": MoveEnum.Left,
+        u"right": MoveEnum.Right
     }
 
     pressed_keys = {}
@@ -179,7 +181,7 @@ if __name__ == '__main__':
                 end = True
             if event.type == pygame.KEYDOWN:
                 key_pressed = pygame.key.name(event.key)
-                if key_pressed == 'escape':
+                if key_pressed == u'escape':
                     end = True
                 if key_pressed not in pressed_keys or not pressed_keys[key_pressed]:
                     pressed_keys[key_pressed] = True

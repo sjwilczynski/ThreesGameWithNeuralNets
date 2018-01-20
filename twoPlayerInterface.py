@@ -1,34 +1,36 @@
+from __future__ import absolute_import
 from gameInterface import *
 from twoPlayerGame import *
+from itertools import imap
 
-if __name__ == '__main__':
+if __name__ == u'__main__':
     games = []
     correct = False
     while not correct:
-        game_type = input('Choose game type\n')
-        if game_type == 'threes':
+        game_type = raw_input(u'Choose game type\n')
+        if game_type == u'threes':
             games = [threes.Threes(save_game=False), threes.Threes(save_game=False)]
             correct = True
-        elif game_type == '2048':
+        elif game_type == u'2048':
             games = [g2048.G2048(save_game=False), g2048.G2048(save_game=False)]
             correct = True
         else:
-            print('You passed invalid game type - try again')
+            print u'You passed invalid game type - try again'
 
     seed = int(time.time())
     random.seed(seed)
-    moves_dict = {"w": MoveEnum.Up,
-                  "a": MoveEnum.Left,
-                  "s": MoveEnum.Down,
-                  "d": MoveEnum.Right}
-    valid_inputs = ['w', 'a', 's', 'd', 'up', 'left', 'down', 'right']
-    players = ['Player1', 'Player2']
+    moves_dict = {u"w": MoveEnum.Up,
+                  u"a": MoveEnum.Left,
+                  u"s": MoveEnum.Down,
+                  u"d": MoveEnum.Right}
+    valid_inputs = [u'w', u'a', u's', u'd', u'up', u'left', u'down', u'right']
+    players = [u'Player1', u'Player2']
     curr_player = 0
 
     pygame.init()
     pygame.font.init()
     pygame.display.set_caption(game_type)
-    interfaces = list(map(lambda x: Interface(x), games))
+    interfaces = list(imap(lambda x: Interface(x), games))
 
     width = sum(interface.surface.get_width() for interface in interfaces)
     height = max(interface.surface.get_height() for interface in interfaces)
@@ -47,7 +49,7 @@ if __name__ == '__main__':
                 end = True
             if event.type == pygame.KEYDOWN:
                 key_pressed = pygame.key.name(event.key)
-                if key_pressed == 'escape':
+                if key_pressed == u'escape':
                     end = True
                 if key_pressed not in pressed_keys or not pressed_keys[key_pressed]:
                     pressed_keys[key_pressed] = True

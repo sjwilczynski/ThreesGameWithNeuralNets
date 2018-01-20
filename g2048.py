@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import random
 
 from gameModel import *
@@ -8,13 +9,13 @@ class G2048(Model):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
-        self.board = np.array([[0 for _ in range(self.width)] for _ in range(self.height)], dtype=np.int32)
+        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
         self._initBoard()
         self.turn_counter = 0
         self.score = 0
 
     def _initBoard(self):
-        fields = [(x, y) for x in range(self.width) for y in range(self.height)]
+        fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]
         random.shuffle(fields)
         for x, y in fields[:2]:
             self.board[y][x] = self._getNext()
@@ -29,8 +30,8 @@ class G2048(Model):
         return False
 
     def canMove(self, move):
-        xs = [i for i in range(self.width)]
-        ys = [i for i in range(self.height)]
+        xs = [i for i in xrange(self.width)]
+        ys = [i for i in xrange(self.height)]
         if move == MoveEnum.Left:
             return self._canMove(xs[1:], ys, -1, 0)
         if move == MoveEnum.Up:
@@ -60,15 +61,15 @@ class G2048(Model):
 
     def _emptyFields(self):
         result = []
-        for y in range(4):
-            for x in range(4):
+        for y in xrange(4):
+            for x in xrange(4):
                 if self.board[y][x] == 0:
                     result += [(y, x)]
         return result
 
     def makeMove(self, move):
-        xs = [i for i in range(self.width)]
-        ys = [i for i in range(self.height)]
+        xs = [i for i in xrange(self.width)]
+        ys = [i for i in xrange(self.height)]
         if move == MoveEnum.Left:
             self._makeMove(xs[1:], ys, -1, 0)
         if move == MoveEnum.Up:
