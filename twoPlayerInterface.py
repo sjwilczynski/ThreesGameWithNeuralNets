@@ -62,8 +62,6 @@ if __name__ == u'__main__':
                             games[i].turn_counter += 1
                             games[i].makeMove(move)
                             curr_player = (curr_player + 1) % 2
-                if not is_any_move_valid(games[0], games[1], moves_dict):
-                    end = True
                 for i, intf in enumerate(interfaces):
                     intf.redraw(curr_player == i)
             if event.type == pygame.KEYUP:
