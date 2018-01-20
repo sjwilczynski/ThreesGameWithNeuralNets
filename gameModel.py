@@ -58,8 +58,8 @@ class Model(object):
             game = copy.deepcopy(self)
         game.makeMove(move)
         move_val = move.value
-        if normalize:
-            move_val /= 4
+        #if normalize:
+        #    move_val /= 4
         score = game.score() - score
         if normalize:
             score = score / (16 * 3 ** 12)

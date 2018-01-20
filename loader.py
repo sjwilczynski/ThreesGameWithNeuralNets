@@ -24,9 +24,9 @@ class Loader(object):
         if random.random() < self.epsilon:
             move = random.choice(self.game_state.getPossibleMoves())
         else:
-            res = model.Q(self.game_state.data())
+            res = model.Q(self.game_state.data(True))
             move = sorted(self.game_state.getPossibleMoves(), key=lambda x: res[x.value])[0]
-        return self.game_state.getTransitionData(move, True)
+        return self.game_state.getTransitionData(move, True, True)
 
 
 if __name__ == u'__main__':
