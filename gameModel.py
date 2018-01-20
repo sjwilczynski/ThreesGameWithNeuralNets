@@ -1,3 +1,4 @@
+import copy
 import enum
 import time
 
@@ -45,6 +46,13 @@ class Model:
 
     def score(self):
         raise NotImplemented
+
+    def getTransitionData(self, move):
+        game = copy.deepcopy(self)
+        game.makeMove(move)
+        result = np.append(self.data(), [move.value, game.score() - self.score()])
+        result = np.append(result, game.data())
+        return result
 
     def data(self):
         """
