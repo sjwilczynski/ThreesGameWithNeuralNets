@@ -1,12 +1,12 @@
-from __future__ import absolute_import
+
 import argparse
-from threes import *
+from threes3 import *
 from io import open
 
 import random
 
 parser = argparse.ArgumentParser()
-parser.add_argument(u"file", help=u"file to translate data")
+parser.add_argument("file", help="file to translate data")
 args = parser.parse_args()
 
 filename = args.file
@@ -16,23 +16,33 @@ seed = int(f.readline())
 random.seed(seed)
 game = Threes()
 
-file = u''
+file = ''
 if game.save_game:
     filename = getFilename()
-    file = open(filename, u'a+')
-    file.write(unicode(seed) + u'\n')
+    file = open(filename, 'a+')
+    file.write(str(seed) + '\n')
 
 moves_dict = {MoveEnum.Up.value: MoveEnum.Up,
               MoveEnum.Left.value : MoveEnum.Left,
               MoveEnum.Down.value : MoveEnum.Down,
               MoveEnum.Right.value : MoveEnum.Right}
+
+def read_next_data():
+    first_line = f.readline()
+    if not first_line:
+        file.close()
+        exit(0)
+    if first_line[-2] != ']':
+        first_line += f.readline()
+    return first_line
+
 while True:
     any_move = False
-    for m in moves_dict.values():
+    for m in list(moves_dict.values()):
         any_move = any_move or game.canMove(m)
     if not any_move:
         break
-    w = int(f.readline().split(',')[2])
+    w = int(read_next_data().split(',')[-1][:-2]) 
     if w in moves_dict:
         m = moves_dict[w]
         if game.canMove(m):
@@ -41,11 +51,9 @@ while True:
             game.turn_counter += 1
             game.makeMove(m)
         else:
-            print u"THE MOVE IS NOT VALID!"
+            print(w)
     else:
-        print u"INVALID COMMAND"
-        print w
-    print
+        print(w)
 if game.save_game:
     file.close()
 
