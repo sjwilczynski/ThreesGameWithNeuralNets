@@ -190,7 +190,6 @@ if __name__ == u'__main__':
                         if game.canMove(m):
                             if game.save_game:
                                 saveState(game, m, file)
-                            game.turn_counter += 1
                             game.makeMove(m)
                             interface.redraw()
             if event.type == pygame.KEYUP:

@@ -59,7 +59,6 @@ if __name__ == u'__main__':
                         i = int(ind > 3)
                         move = moves_dict[valid_inputs[ind - 4] if i else valid_inputs[ind]]
                         if games[i].canMove(move):
-                            games[i].turn_counter += 1
                             games[i].makeMove(move)
                             curr_player = (curr_player + 1) % 2
                 for i, intf in enumerate(interfaces):
