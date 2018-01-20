@@ -62,8 +62,6 @@ if __name__ == u'__main__':
                             games[i].turn_counter += 1
                             games[i].makeMove(move)
                             curr_player = (curr_player + 1) % 2
-                if not is_any_move_valid(games[0], games[1], moves_dict):
-                    end = True
                 for i, intf in enumerate(interfaces):
                     intf.redraw(curr_player == i)
             if event.type == pygame.KEYUP:
@@ -74,4 +72,3 @@ if __name__ == u'__main__':
             screen.blit(interface.surface, (x, 0))
             x += interface.surface.get_width()
         pygame.display.flip()
-    # TODO Don't close the window immediately after players are out of moves
