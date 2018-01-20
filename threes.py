@@ -158,8 +158,7 @@ class Threes(Model):
         nexts = self.visible_nexts
         for i in range(3 - len(nexts)):
             nexts += [-1]
-        result = np.append(nexts, result)
-        result = np.append([self.turn_counter, self.score()], result)
+        result = np.append(result, nexts)
         return result
 
     def stateInfo(self):

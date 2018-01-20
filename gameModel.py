@@ -1,3 +1,4 @@
+import copy
 import enum
 import time
 
@@ -15,6 +16,11 @@ class MoveEnum(enum.Enum):
     Down = 3
 
 
+class GameEnum(enum.Enum):
+    Threes = 0
+    G2048 = 1
+
+
 class State:
     def __init__(self, board, visible_nexts=None, score=None):
         self.board = board
@@ -29,11 +35,27 @@ class Model:
     def canMove(self, move):
         raise NotImplemented
 
+    def getPossibleMoves(self):
+        return list(filter(self.canMove, list(MoveEnum)))
+
     def makeMove(self, move):
         raise NotImplemented
 
     def stateInfo(self):
         raise NotImplemented
+
+    def score(self):
+        raise NotImplemented
+
+    def getTransitionData(self, move, make_move=False):
+        game = self
+        score = self.score()
+        if not make_move:
+            game = copy.deepcopy(self)
+        game.makeMove(move)
+        result = np.append(self.data(), [move.value, game.score() - score])
+        result = np.append(result, game.data())
+        return result
 
     def data(self):
         """
@@ -46,16 +68,15 @@ def getFilename():
     return "game_results/" + time.strftime("%Y%m%d-%H%M%S")
 
 
-def saveState(model_data, move, file):
+def saveState(model, move, file):
     '''
     Saves state of the game for future learning
-    :param model_data: numpy array containing current turn number, score, possible next fields, board
+    :param model: current Model object
     :param move: move made by the player for the current game state
     :param file: file to save the data in
     :return:
     '''
-    row = np.append(model_data, [move])
-    file.write(np.array2string(row, separator=',') + '\n')
+    file.write(np.array2string(model.getTransitionData(move), separator=',') + '\n')
     file.flush()
 
 
