@@ -4,7 +4,7 @@ from random import *
 from threes import *
 
 
-class loader(object):
+class Loader(object):
     def __init__(self, game=Threes, epsilon=0.01):
         self.game = game
         self.game_state = self.game()
@@ -22,13 +22,17 @@ class loader(object):
         move = None
         if random.random() < self.epsilon:
             move = random.choice(self.game_state.getPossibleMoves())
+            print "tu {}".format(move)
         else:
-            best_result = 0
+            best_result = float("-inf")
             for pos_move in self.game_state.getPossibleMoves():
-                res = model(np.array([np.append(self.game_state.data(), [pos_move.value])]))
-                if res > best_result:
+                res = model.Q(np.array([np.append(self.game_state.data(), [pos_move.value])]))[0]
+                print res
+                if res >= best_result:
                     best_result = res
                     move = pos_move
+            if move is None:
+                print self.game_state.getPossibleMoves()
         return self.game_state.getTransitionData(move, True)
 
 
