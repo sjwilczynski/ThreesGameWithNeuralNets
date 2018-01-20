@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 from random import *
 
 from threes import *
@@ -37,9 +38,13 @@ class Loader(object):
 
 
 if __name__ == u'__main__':
-    def f(a):
-        return a[0][-1]
+    class f:
+        def Q(self, a):
+            return [a[0][-1]]
 
 
-    loa = loader()
-    print loa.get(f, 20)
+    loa = Loader()
+    print
+    random.choice(loa.game_state.getPossibleMoves())
+    print
+    loa.get(f())

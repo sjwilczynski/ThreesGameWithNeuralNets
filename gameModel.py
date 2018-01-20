@@ -1,11 +1,12 @@
 from __future__ import absolute_import
-import copy
-import enum
-import time
 
+import copy
 import numpy as np
-from itertools import ifilter
+import time
 from io import open
+from itertools import ifilter
+
+import enum
 
 WIDTH = 4
 HEIGHT = 4
@@ -32,7 +33,7 @@ class State(object):
 
 
 class Model(object):
-    def __init__(self, save_game):
+    def __init__(self, save_game, data=None):
         self.save_game = save_game
 
     def canMove(self, move):

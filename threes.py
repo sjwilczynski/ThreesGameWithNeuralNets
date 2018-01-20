@@ -1,5 +1,6 @@
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+
 import math
 import random
 
@@ -7,7 +8,7 @@ from gameModel import *
 
 
 class Threes(Model):
-    def __init__(self, save_game=True):
+    def __init__(self, save_game=True, data=None):
         Model.__init__(self, save_game)
         self.width = WIDTH
         self.height = HEIGHT
@@ -20,7 +21,30 @@ class Threes(Model):
         self._initBoard()
         self._calculateNext()
         self._calculateVisibleNexts()
-        self.turn_counter = 0
+        if data:
+            i, j = 0, 0
+            size = self.width * self.height
+            for elem in data[:size]:
+                self.board[j][i] = elem
+                i += 1
+                if i >= self.width:
+                    j += 1
+                    i = 0
+            self._parseNext(data[-3:])
+            quantity_1 = data[:size].count(1)
+            quantity_2 = data[:size].count(2)
+            loaded = [min(4, 4 - (quantity_2 - quantity_1)), min(4, 4 - (quantity_1 - quantity_2)), 4]
+            self.poss_index = sum(loaded)
+            self.poss_nexts = np.array([])
+            for i in xrange(3):
+                self.poss_nexts = np.append(self.poss_nexts, [i + 1 for j in xrange(loaded[i])])
+            random.shuffle(self.poss_nexts)
+            for i in xrange(3):
+                self.poss_nexts = np.append(self.poss_nexts, [i + 1 for j in xrange(4 - loaded[i])])
+
+    def _parseNext(self, nexts):
+        self.visible_nexts = list(ifilter(lambda x: x != -1, nexts))
+        self.next = random.choice(self.visible_nexts)
 
     def _initBoard(self):
         fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]
