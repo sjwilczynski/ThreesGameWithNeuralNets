@@ -37,7 +37,7 @@ class Model(object):
         self.save_game = save_game
 
     def newGame(self):
-        raise  NotImplemented
+        raise NotImplemented
 
     def canMove(self, move):
         raise NotImplemented
@@ -61,7 +61,7 @@ class Model(object):
             game = copy.deepcopy(self)
         game.makeMove(move)
         move_val = move.value
-        #if normalize:
+        # if normalize:
         #    move_val /= 4
         score = game.score() - score
         if normalize:

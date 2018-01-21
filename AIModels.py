@@ -77,7 +77,7 @@ class RandomAI(AIModel):
     def choose_move(self):
         possible_moves = self.game.getPossibleMoves()
         return possible_moves[np.random.randint(0, len(possible_moves))]
-    
+
 
 class MiniMaxAI(AIModel):
     def __init__(self, game, filename=None):
@@ -85,5 +85,3 @@ class MiniMaxAI(AIModel):
 
     def choose_move(self):
         return minimax_choose_move(self.game, MOVES_DICT.values())
-    
-    

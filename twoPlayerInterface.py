@@ -35,7 +35,7 @@ if __name__ == u'__main__':
     width = sum(interface.surface.get_width() for interface in interfaces)
     height = max(interface.surface.get_height() for interface in interfaces)
 
-    screen = pygame.display.set_mode((width,height))
+    screen = pygame.display.set_mode((width, height))
 
     end = False
     pressed_keys = {}

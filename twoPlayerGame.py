@@ -15,7 +15,7 @@ def printer(curr_games):
         r1 = board1[j]
         r2 = board2[j]
         print_row(r1)
-        print u"",; sys.stdout.write(u" | ")
+        print u"", sys.stdout.write(u" | ")
         print_row(r2)
         print u""
 
@@ -28,7 +28,7 @@ def print_row(row):
         print u"{:>4}".format(x),
 
 
-def is_any_move_valid(g1, g2,dict=None):
+def is_any_move_valid(g1, g2, dict=None):
     if not dict:
         dict = moves_dict
     any_move = False
