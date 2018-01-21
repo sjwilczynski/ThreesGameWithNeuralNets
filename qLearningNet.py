@@ -1,5 +1,6 @@
 import torch
 from torch.autograd import Variable
+from torch import nn
 
 FILENAME = "saved_parameters"
 INPUT_SIZE = 19

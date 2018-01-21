@@ -1,5 +1,6 @@
 from gameModel import *
 from qLearningNet import *
+from min_max import best_move as minimax_choose_move
 from test import printer
 import random
 
@@ -12,6 +13,8 @@ MOVES_DICT = {u"w": MoveEnum.Up,
 class AIModel(object):
     def __init__(self, game, filename=None):
         self.game = game
+        seed = int(time.time())
+        random.seed(seed)
 
     def choose_move(self):
         raise NotImplemented
@@ -19,13 +22,12 @@ class AIModel(object):
     @staticmethod
     def test_ai(ai_model, number_of_games, verbose=False):
         global_scores = []
+        highests = []
         moves_count = {MoveEnum.Up.name: 0,
                        MoveEnum.Left.name: 0,
                        MoveEnum.Down.name: 0,
                        MoveEnum.Right.name: 0}
         for _ in range(number_of_games):
-            seed = int(time.time())
-            random.seed(seed)
             ai_model.game.newGame()
             if verbose:
                 printer(ai_model.game)
@@ -35,6 +37,7 @@ class AIModel(object):
                     any_move = any_move or ai_model.game.canMove(move)
                 if not any_move:
                     global_scores += [ai_model.game.score()]
+                    highests += [ai_model.game.highest]
                     break
                 move = ai_model.choose_move()
                 if verbose:
@@ -49,7 +52,10 @@ class AIModel(object):
                     printer(ai_model.game)
             if verbose:
                 print "Game score was {}".format(ai_model.game.score())
-                print "Number of times each move were chosen {}".format(moves_count)
+        if verbose:
+            print "All scores {}".format(global_scores)
+            print "Moves count {}".format(moves_count)
+        return global_scores, moves_count, highests
 
 
 class QLearningNetAI(AIModel):
@@ -71,3 +77,13 @@ class RandomAI(AIModel):
     def choose_move(self):
         possible_moves = self.game.getPossibleMoves()
         return possible_moves[np.random.randint(0, len(possible_moves))]
+    
+
+class MiniMaxAI(AIModel):
+    def __init__(self, game, filename=None):
+        super(MiniMaxAI, self).__init__(game)
+
+    def choose_move(self):
+        return minimax_choose_move(self.game, MOVES_DICT.values())
+    
+    
