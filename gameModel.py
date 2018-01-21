@@ -36,6 +36,9 @@ class Model(object):
     def __init__(self, save_game, data=None):
         self.save_game = save_game
 
+    def newGame(self):
+        raise  NotImplemented
+
     def canMove(self, move):
         raise NotImplemented
 

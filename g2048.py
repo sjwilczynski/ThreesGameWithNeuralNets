@@ -10,9 +10,7 @@ class G2048(Model):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
-        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
-        self._initBoard()
-        self.score = 0
+        self.newGame()
         if data:
             i, j = 0, 0
             for elem in data:
@@ -21,6 +19,11 @@ class G2048(Model):
                 if i >= self.width:
                     j += 1
                     i = 0
+
+    def newGame(self):
+        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
+        self._initBoard()
+        self.score = 0
 
     def _initBoard(self):
         fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]

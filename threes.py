@@ -12,15 +12,7 @@ class Threes(Model):
         Model.__init__(self, save_game)
         self.width = WIDTH
         self.height = HEIGHT
-        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
-        self.highest = 3
-        self.highest_power = 0
-        self.poss_nexts = np.array([(i % 3) + 1 for i in xrange(12)], dtype=np.int32)
-        random.shuffle(self.poss_nexts)
-        self.poss_index = 0
-        self._initBoard()
-        self._calculateNext()
-        self._calculateVisibleNexts()
+        self.newGame()
         if data:
             i, j = 0, 0
             size = self.width * self.height
@@ -41,6 +33,17 @@ class Threes(Model):
             random.shuffle(self.poss_nexts)
             for i in xrange(3):
                 self.poss_nexts = np.append(self.poss_nexts, [i + 1 for j in xrange(4 - loaded[i])])
+
+    def newGame(self):
+        self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
+        self.highest = 3
+        self.highest_power = 0
+        self.poss_nexts = np.array([(i % 3) + 1 for i in xrange(12)], dtype=np.int32)
+        random.shuffle(self.poss_nexts)
+        self.poss_index = 0
+        self._initBoard()
+        self._calculateNext()
+        self._calculateVisibleNexts()
 
     def _parseNext(self, nexts):
         self.visible_nexts = list(ifilter(lambda x: x != 0, nexts))
