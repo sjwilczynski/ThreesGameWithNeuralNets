@@ -12,7 +12,6 @@ class G2048(Model):
         self.height = HEIGHT
         self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
         self._initBoard()
-        self.turn_counter = 0
         self.score = 0
         if data:
             i, j = 0, 0
@@ -103,7 +102,7 @@ class G2048(Model):
 
     def data(self):
         result = np.array(self.board.flatten())
-        result = np.append([self.turn_counter, self.score], result)
+        result = np.append([self.score], result)
         return result
 
     def score(self):

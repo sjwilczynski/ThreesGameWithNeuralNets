@@ -45,7 +45,6 @@ if __name__ == u'__main__':
             if game.canMove(m):
                 if game.save_game:
                     saveState(game, m, file)
-                game.turn_counter += 1
                 game.makeMove(m)
             else:
                 print u"THE MOVE IS NOT VALID!"
