@@ -63,6 +63,7 @@ class QLearningNetAI(AIModel):
         super(QLearningNetAI, self).__init__(game)
         self.ai = QLearningNet()
         if filename is not None:
+            print "Loading net parameters"
             self.ai.load_parameters(FILENAME)
 
     def choose_move(self):
