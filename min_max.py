@@ -3,15 +3,6 @@ from __future__ import division
 
 from test import *
 
-game = Threes()
-printer(game)
-game2 = copy.deepcopy(game)
-game2.makeMove(MoveEnum.Up)
-print
-printer(game)
-print
-printer(game2)
-
 
 def count_non_empty(board):
     result = 0

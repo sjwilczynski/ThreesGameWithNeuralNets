@@ -11,7 +11,7 @@ MOVES_DICT = {u"w": MoveEnum.Up,
 
 
 class AIModel(object):
-    def __init__(self, game, filename=None):
+    def __init__(self, game):
         self.game = game
         seed = int(time.time())
         random.seed(seed)
@@ -59,12 +59,15 @@ class AIModel(object):
 
 
 class QLearningNetAI(AIModel):
-    def __init__(self, game, filename=None):
+    def __init__(self, game, filename=None, net=None):
         super(QLearningNetAI, self).__init__(game)
-        self.ai = QLearningNet()
-        if filename is not None:
-            print "Loading net parameters"
-            self.ai.load_parameters(FILENAME)
+        if net is not None:
+            self.ai = net
+        else:
+            self.ai = QLearningNet()
+            if filename is not None:
+                print "Loading net parameters"
+                self.ai.load_parameters(filename)
 
     def choose_move(self):
         q_values = self.ai.Q(self.game.data())
@@ -72,7 +75,7 @@ class QLearningNetAI(AIModel):
 
 
 class RandomAI(AIModel):
-    def __init__(self, game, filename=None):
+    def __init__(self, game):
         super(RandomAI, self).__init__(game)
 
     def choose_move(self):
@@ -81,7 +84,7 @@ class RandomAI(AIModel):
 
 
 class MiniMaxAI(AIModel):
-    def __init__(self, game, filename=None):
+    def __init__(self, game):
         super(MiniMaxAI, self).__init__(game)
 
     def choose_move(self):
