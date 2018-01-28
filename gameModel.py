@@ -65,9 +65,9 @@ class Model(object):
         # if normalize:
         #    move_val /= 4
         merged_tiles = tiles + 1 - game.tiles_count()
-        score = game.score() - score + 10 * max(0,merged_tiles)
+        score = game.score() - score + 2 * max(0,merged_tiles)
         if normalize:
-            score = score / (16 * 3 ** 12)
+            score = score / 1000
         result = np.append(self.data(normalize), [move_val, score])
         result = np.append(result, game.data(normalize))
         return result

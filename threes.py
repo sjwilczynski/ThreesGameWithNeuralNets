@@ -183,13 +183,13 @@ class Threes(Model):
         return result
 
     def data(self, normalize=False):
-        result = np.array(self.board.flatten())
-        nexts = self.visible_nexts
+        result = np.log2(np.array(self.board.flatten()), where=[self.board.flatten() > 0])
+        nexts = np.log2(self.visible_nexts) + 0.5
         for i in xrange(3 - len(nexts)):
-            nexts += [0]
+            nexts = np.append(nexts, [0])
         result = np.append(result, nexts)
         if normalize:
-            result = result / (3 * 2 ** 12)
+            result = result / (3 * 12)
         return result
 
     def stateInfo(self):
