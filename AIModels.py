@@ -71,6 +71,7 @@ class QLearningNetAI(AIModel):
 
     def choose_move(self, verbose=False):
         q_values = self.ai.Q(self.game.data(True))
+        #print sorted(self.game.getPossibleMoves(), key=lambda x: q_values[x.value])
         if verbose:
             print self.game.data(True)
             print "Qvalues ",["%.15f"%item for item in q_values]
