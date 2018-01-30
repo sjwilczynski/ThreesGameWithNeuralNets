@@ -27,7 +27,7 @@ class Loader(object):
             move = random.choice(self.game.getPossibleMoves())
         else:
             res = model.Q(self.game.data(True))
-            move = sorted(self.game.getPossibleMoves(), key=lambda x: res[x.value])[0]
+            move = sorted(self.game.getPossibleMoves(), key=lambda x: res[x.value])[-1]
         return self.game.getTransitionData(move, True, True)
     
     @staticmethod

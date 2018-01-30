@@ -16,7 +16,7 @@ class AIModel(object):
         seed = int(time.time())
         random.seed(seed)
 
-    def choose_move(self):
+    def choose_move(self, verbose=False):
         raise NotImplemented
 
     @staticmethod
@@ -39,7 +39,7 @@ class AIModel(object):
                     global_scores += [ai_model.game.score()]
                     highests += [ai_model.game.highest]
                     break
-                move = ai_model.choose_move()
+                move = ai_model.choose_move(verbose)
                 if verbose:
                     print "Best move is {}".format(move)
                 moves_count[move.name] += 1
@@ -69,16 +69,19 @@ class QLearningNetAI(AIModel):
                 print "Loading net parameters"
                 self.ai.load_parameters(filename)
 
-    def choose_move(self):
-        q_values = self.ai.Q(self.game.data())
-        return sorted(self.game.getPossibleMoves(), key=lambda x: q_values[x.value])[0]
+    def choose_move(self, verbose=False):
+        q_values = self.ai.Q(self.game.data(True))
+        if verbose:
+            print self.game.data(True)
+            print "Qvalues ",["%.15f"%item for item in q_values]
+        return sorted(self.game.getPossibleMoves(), key=lambda x: q_values[x.value])[-1]
 
 
 class RandomAI(AIModel):
     def __init__(self, game):
         super(RandomAI, self).__init__(game)
 
-    def choose_move(self):
+    def choose_move(self, verbose=False):
         possible_moves = self.game.getPossibleMoves()
         return possible_moves[np.random.randint(0, len(possible_moves))]
 
@@ -87,5 +90,5 @@ class MiniMaxAI(AIModel):
     def __init__(self, game):
         super(MiniMaxAI, self).__init__(game)
 
-    def choose_move(self):
+    def choose_move(self, verbose=False):
         return minimax_choose_move(self.game, MOVES_DICT.values())
