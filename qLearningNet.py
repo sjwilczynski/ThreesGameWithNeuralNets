@@ -14,7 +14,7 @@ class QLearningNet(object):
             self.network = network
             self.criterion = criterion
         else:
-            self.network = nn.Sequential(nn.Linear(INPUT_SIZE, HIDDEN_SIZE), nn.Tanh(), nn.Linear(HIDDEN_SIZE, 4))
+            self.network = nn.Sequential(nn.Linear(INPUT_SIZE, HIDDEN_SIZE), nn.ReLU(), nn.Linear(HIDDEN_SIZE, 4))
             self.criterion = nn.MSELoss()
 
     def Q(self, batch, as_variable=False):
