@@ -10,7 +10,7 @@ class G2048(Model):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
-        self.heighest = 4
+        self.highest = 4
         self.newGame()
         if data:
             i, j = 0, 0
