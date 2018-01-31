@@ -207,6 +207,3 @@ class Threes(Model):
 
     def stateInfo(self):
         return State(self.board, self.visible_nexts, self.score())
-    
-    def tiles_count(self):
-        return np.count_nonzero(self.board)

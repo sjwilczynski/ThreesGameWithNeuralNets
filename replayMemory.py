@@ -1,10 +1,8 @@
 import numpy as np
 
-entry_len = 40
-
 
 class ReplayMemory(object):
-    def __init__(self, max_size):
+    def __init__(self, max_size, entry_len=40):
         self.max_size = max_size
         self.data = np.zeros((1, entry_len))
 

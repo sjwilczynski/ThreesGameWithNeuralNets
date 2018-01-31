@@ -53,6 +53,9 @@ class Model(object):
 
     def score(self):
         raise NotImplemented
+        
+    def tiles_count(self):
+        return np.count_nonzero(self.board)
 
     def getTransitionData(self, move, make_move=False, normalize=False):
         game = self

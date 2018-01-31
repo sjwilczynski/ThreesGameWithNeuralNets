@@ -10,6 +10,7 @@ class G2048(Model):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
+        self.heighest = 4
         self.newGame()
         if data:
             i, j = 0, 0
@@ -23,7 +24,7 @@ class G2048(Model):
     def newGame(self):
         self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
         self._initBoard()
-        self.score = 0
+        self.curr_score = 0
 
     def _initBoard(self):
         fields = [(x, y) for x in xrange(self.width) for y in xrange(self.height)]
@@ -92,9 +93,10 @@ class G2048(Model):
 
         y, x = random.choice(self._emptyFields())
         self.board[y][x] = self._getNext()
+        self.highest = max(max(x) for x in self.board)
 
     def _join(self, el1, el2):
-        self.score += el1 + el2
+        self.curr_score += el1 + el2
         return el1 + el2
 
     def _canJoin(self, el1, el2):
@@ -103,13 +105,24 @@ class G2048(Model):
     def _getNext(self):
         return 2 if random.random() < 0.9 else 4
 
-    def data(self):
-        result = np.array(self.board.flatten())
-        result = np.append([self.score], result)
+    def data(self, normalize=False):
+        result = np.log2(np.array(self.board.flatten()), where=[self.board.flatten() > 0])
+        if normalize:
+            result = result / 15
+        result = np.append(result, [])
         return result
 
+        '''
+        result = np.array(self.board.flatten())
+        result = np.append(result, nexts)
+        if normalize:
+            result = result / (2 ** 15)
+        result = np.append(result, [])
+        return result
+        '''
+
     def score(self):
-        return self.score
+        return self.curr_score
 
     def stateInfo(self):
-        return State(self.board, score=self.score)
+        return State(self.board, score=self.curr_score)

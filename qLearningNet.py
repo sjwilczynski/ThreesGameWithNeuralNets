@@ -9,12 +9,12 @@ CUDA = False
 
 
 class QLearningNet(object):
-    def __init__(self, network=None, criterion=None):
+    def __init__(self, network=None, criterion=None, input_size=INPUT_SIZE, hidden_size=HIDDEN_SIZE):
         if network is not None and criterion is not None:
             self.network = network
             self.criterion = criterion
         else:
-            self.network = nn.Sequential(nn.Linear(INPUT_SIZE, HIDDEN_SIZE), nn.ReLU(), nn.Linear(HIDDEN_SIZE, 4))
+            self.network = nn.Sequential(nn.Linear(input_size, hidden_size), nn.ReLU(), nn.Linear(hidden_size, 4))
             self.criterion = nn.MSELoss()
 
     def Q(self, batch, as_variable=False):
