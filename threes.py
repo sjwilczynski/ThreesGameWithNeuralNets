@@ -6,6 +6,8 @@ import random
 
 from gameModel import *
 
+REROLL_THREES = True
+
 
 class Threes(Model):
     def __init__(self, save_game=True, data=None):
@@ -143,6 +145,10 @@ class Threes(Model):
         if self.poss_index >= len(self.poss_nexts):
             random.shuffle(self.poss_nexts)
             self.poss_index = 0
+        elif REROLL_THREES:
+            to_reroll = self.poss_nexts[self.poss_index:]
+            random.shuffle(to_reroll)
+            self.poss_nexts[self.poss_index:] = to_reroll
         return self.next
 
     def _calculateVisibleNexts(self):

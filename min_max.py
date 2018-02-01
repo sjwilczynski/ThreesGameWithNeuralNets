@@ -54,7 +54,7 @@ def rec_best_move(model, moves, depth):
     return result
 
 
-def best_move(model, moves):
+def best_move(model, moves=list(MoveEnum), depth=3):
     result = None
     score = 0
     for move in moves:
@@ -62,7 +62,7 @@ def best_move(model, moves):
             continue
         model_c = copy.deepcopy(model)
         model_c.makeMove(move)
-        model_c = rec_best_move(model_c, moves, 3)
+        model_c = rec_best_move(model_c, moves, depth)
         new_score = heuristic_value(model_c.stateInfo().board)
         if new_score > score:
             score = new_score
