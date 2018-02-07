@@ -14,7 +14,7 @@ def count_non_empty(board):
 
 
 def board_modifier(x, y):
-    result = 1
+    result = 1.0
     if x == 0 or x == 3:
         result *= 1.5
     if y == 0 or y == 3:
@@ -23,7 +23,7 @@ def board_modifier(x, y):
 
 
 def heuristic_value(board):
-    result = 0
+    result = 0.0
     x, y = 0, 0
     for row in board:
         x = 0

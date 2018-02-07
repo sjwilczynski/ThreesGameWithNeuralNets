@@ -177,7 +177,7 @@ class Threes(Model):
     def _scoringFactor(element):
         if element < 3:
             return 0
-        return int(math.log(element / 3, 2) + 1)
+        return int(math.log(element / 3.0, 2) + 1)
 
     def score(self):
         result = 0
@@ -196,7 +196,7 @@ class Threes(Model):
             nexts = np.append(nexts, [0])
         result = np.append(result, nexts)
         if normalize:
-            result = result / (3 * 12)
+            result = result / (3.0 * 12)
         return result
         
         '''
@@ -206,7 +206,7 @@ class Threes(Model):
             nexts += [0]
         result = np.append(result, nexts)
         if normalize:
-            result = result / (3 * 2 ** 12)
+            result = result / (3.0 * 2 ** 12)
         return result
         '''
 

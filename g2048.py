@@ -108,7 +108,7 @@ class G2048(Model):
     def data(self, normalize=False):
         result = np.log2(np.array(self.board.flatten()), where=[self.board.flatten() > 0])
         if normalize:
-            result = result / 15
+            result = result / 15.0
         result = np.append(result, [])
         return result
 
@@ -116,7 +116,7 @@ class G2048(Model):
         result = np.array(self.board.flatten())
         result = np.append(result, nexts)
         if normalize:
-            result = result / (2 ** 15)
+            result = result / (2.0 ** 15)
         result = np.append(result, [])
         return result
         '''
