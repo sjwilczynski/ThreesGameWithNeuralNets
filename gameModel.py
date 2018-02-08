@@ -51,7 +51,7 @@ class Model(object):
     def stateInfo(self):
         raise NotImplemented
 
-    def score(self):
+    def score(self, normalize=False):
         raise NotImplemented
         
     def tiles_count(self):
@@ -59,7 +59,7 @@ class Model(object):
 
     def getTransitionData(self, move, make_move=False, normalize=False):
         game = self
-        score = self.score()
+        score = self.score(normalize)
         tiles = self.tiles_count()
         if not make_move:
             game = copy.deepcopy(self)
@@ -68,10 +68,10 @@ class Model(object):
         # if normalize:
         #    move_val /= 4.0
         merged_tiles = tiles + 1 - game.tiles_count()
-        score = game.score() - score + 10 * max(0,merged_tiles)
+        titles_mod = 10 * max(0,merged_tiles)
         if normalize:
-            #score = score / (16.0 * 3 ** 12)
-            score = score / 1000.0
+            titles_mod /= 1000.0
+        score = game.score(normalize) - score + titles_mod
         result = np.append(self.data(normalize), [move_val, score])
         result = np.append(result, game.data(normalize))
         return result

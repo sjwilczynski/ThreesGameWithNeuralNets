@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import random
+import math
 
 from gameModel import *
 
@@ -106,9 +107,10 @@ class G2048(Model):
         return 2 if random.random() < 0.9 else 4
 
     def data(self, normalize=False):
-        result = np.log2(np.array(self.board.flatten()), where=[self.board.flatten() > 0])
+        result = np.array(self.board.flatten())
         if normalize:
-            result = result / 15.0
+            result = np.log2(result, where=[self.board.flatten() > 0])
+            result = result / 16.0
         result = np.append(result, [])
         return result
 
@@ -121,8 +123,11 @@ class G2048(Model):
         return result
         '''
 
-    def score(self):
-        return self.curr_score
+    def score(self, normalize=False):
+        res = self.curr_score
+        if normalize and res > 0:
+            res = math.log(res) / 20.0
+        return res
 
     def stateInfo(self):
         return State(self.board, score=self.curr_score)

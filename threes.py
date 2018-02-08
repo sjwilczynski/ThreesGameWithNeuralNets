@@ -179,26 +179,31 @@ class Threes(Model):
             return 0
         return int(math.log(element / 3.0, 2) + 1)
 
-    def score(self):
+    def score(self, normalize=False):
         result = 0
         for row in self.board:
             for el in row:
                 factor = Threes._scoringFactor(el)
                 if factor > 0:
                     result += 3 ** factor
+        if normalize:
+            result = math.log(result)
+            result /= 20.0
         return result
 
     def data(self, normalize=False):
-        
-        result = np.log2(np.array(self.board.flatten()), where=[self.board.flatten() > 0])
-        nexts = np.log2(self.visible_nexts) + 0.5
+
+        result = np.array(self.board.flatten())
+        nexts = self.visible_nexts
         for i in xrange(3 - len(nexts)):
             nexts = np.append(nexts, [0])
         result = np.append(result, nexts)
         if normalize:
-            result = result / (3.0 * 12)
+            result = result * (2.0 ** 0.5)
+            result = np.log2(result, where=[result > 0])
+            result = result / 15.0
         return result
-        
+
         '''
         result = np.array(self.board.flatten())
         nexts = self.visible_nexts
@@ -209,7 +214,6 @@ class Threes(Model):
             result = result / (3.0 * 2 ** 12)
         return result
         '''
-
 
     def stateInfo(self):
         return State(self.board, self.visible_nexts, self.score())
