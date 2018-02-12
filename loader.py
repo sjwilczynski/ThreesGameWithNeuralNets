@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from random import *
 
 import min_max
+from easyGame import *
 from threes import *
 
 
@@ -26,7 +27,7 @@ class Loader(BaseLoader):
         return np.array(self.replay_memory)
 
     def _getOneBatch(self, model):
-        if not self.game.getPossibleMoves():
+        while not self.game.getPossibleMoves():
             self.game.newGame()
         move = None
         if random.random() < self.epsilon:
@@ -61,7 +62,7 @@ class MinMaxLoader(BaseLoader):
         return np.array(self.replay_memory)
 
     def _getOneBatch(self, model):
-        if not self.game.getPossibleMoves():
+        while not self.game.getPossibleMoves():
             self.game.newGame()
         move = None
         if random.random() < self.epsilon:
@@ -77,6 +78,6 @@ if __name__ == u'__main__':
             return [1, 2, 3, 4]
 
 
-    loa = MinMaxLoader()
+    loa = Loader(game=EasyGame())
     print random.choice(loa.game.getPossibleMoves())
     print loa.get(f())

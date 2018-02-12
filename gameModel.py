@@ -61,6 +61,7 @@ class Model(object):
         game = self
         score = self.score(normalize)
         tiles = self.tiles_count()
+        result = self.data(normalize)
         if not make_move:
             game = copy.deepcopy(self)
         game.makeMove(move)
@@ -72,7 +73,7 @@ class Model(object):
         if normalize:
             titles_mod /= 1000.0
         score = game.score(normalize) - score + titles_mod
-        result = np.append(self.data(normalize), [move_val, score])
+        result = np.append(result, [move_val, score])
         result = np.append(result, game.data(normalize))
         return result
 

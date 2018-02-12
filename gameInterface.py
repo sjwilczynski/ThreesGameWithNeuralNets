@@ -1,8 +1,9 @@
 from __future__ import absolute_import
+
 import pygame  # In order to install pygame pip3 install pygame should be enough
 
+from easyGame import *
 from threes import *
-from io import open
 
 # In case of problems check https://askubuntu.com/questions/401342/how-to-download-pygame-in-python3-3
 
@@ -149,7 +150,7 @@ if __name__ == u'__main__':
     pygame.display.set_caption(u'threes')
     seed = int(time.time())
     random.seed(seed)
-    game = Threes()
+    game = EasyGame(False)
     file = u''
     if game.save_game:
         filename = getFilename()

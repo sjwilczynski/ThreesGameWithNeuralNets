@@ -39,7 +39,7 @@ def heuristic_value(board):
 def rec_best_move(model, moves, depth):
     if depth == 0:
         return model
-    score = 0
+    score = float("-inf")
     result = model
     for move in moves:
         if not model.canMove(move):
@@ -56,7 +56,7 @@ def rec_best_move(model, moves, depth):
 
 def best_move(model, moves=list(MoveEnum), depth=3):
     result = None
-    score = 0
+    score = float("-inf")
     for move in moves:
         if not model.canMove(move):
             continue
