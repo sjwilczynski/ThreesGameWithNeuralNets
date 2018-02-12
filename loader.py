@@ -14,6 +14,18 @@ class BaseLoader(object):
         def get(self, model, batch_size=20):
             pass
 
+    @staticmethod
+    def get_random_states(game, num_states, input_size=19):
+        data = np.zeros((1, input_size))
+        game.newGame()
+        for i in range(50 * num_states):
+            while not game.getPossibleMoves():
+                game.newGame()
+            move = random.choice(game.getPossibleMoves())
+            data = np.append(data, np.array(game.getTransitionData(move, True, True)[:input_size], ndmin=2), axis=0)
+        indices = np.random.randint(1, len(data), num_states)
+        return data[indices, :]
+
 
 class Loader(BaseLoader):
     def __init__(self, game=Threes(), epsilon=0.1):
@@ -36,18 +48,6 @@ class Loader(BaseLoader):
             res = model.Q(self.game.data(True))
             move = sorted(self.game.getPossibleMoves(), key=lambda x: res[x.value])[-1]
         return self.game.getTransitionData(move, True, True)
-    
-    @staticmethod
-    def get_random_states(game, num_states, input_size=19):
-        data = np.zeros((1, input_size))
-        game.newGame()
-        for i in range(50*num_states):
-            if not game.getPossibleMoves():
-                game.newGame()
-            move = random.choice(game.getPossibleMoves())
-            data = np.append(data,np.array(game.getTransitionData(move, True, True)[:input_size], ndmin=2),axis=0)
-        indices = np.random.randint(1, len(data), num_states)
-        return data[indices, :]
 
 
 class MinMaxLoader(BaseLoader):
