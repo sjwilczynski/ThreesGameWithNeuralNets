@@ -78,6 +78,7 @@ if __name__ == u'__main__':
             return [1, 2, 3, 4]
 
 
+    print Loader.get_random_states(EasyGame(), 2, 10)
     loa = Loader(game=EasyGame())
-    print random.choice(loa.game.getPossibleMoves())
+    #    print random.choice(loa.game.getPossibleMoves())
     print loa.get(f())

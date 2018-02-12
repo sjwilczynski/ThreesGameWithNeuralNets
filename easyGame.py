@@ -17,7 +17,6 @@ class EasyGame(Model):
         self.height = EASY_HEIGHT
         self.furthest_pos = (0, 0)
         self.elem_pos = [0, 0]
-        self.moves_made = 0
         self.newGame()
         if data:
             i, j = 0, 0
@@ -30,12 +29,13 @@ class EasyGame(Model):
 
     def newGame(self):
         self.board = np.array([[0 for _ in xrange(self.width)] for _ in xrange(self.height)], dtype=np.int32)
-        x = 0  # np.random.randint(0, self.width)
-        y = 0  # np.random.randint(0, self.height)
+        x = np.random.randint(0, self.width)
+        y = np.random.randint(0, self.height)
         self.board[y][x] = 1
         self.elem_pos = [y, x]
         self.curr_score = x + y
         self.furthest_pos = (y, x)
+        self.moves_made = 0
 
     def _inBound(self, pos, shift):
         return self.height > pos[0] + shift[0] >= 0 and self.width > pos[1] + shift[1] >= 0
