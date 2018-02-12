@@ -17,6 +17,7 @@ class EasyGame(Model):
         self.height = EASY_HEIGHT
         self.furthest_pos = (0, 0)
         self.elem_pos = [0, 0]
+        self.highest = 1
         self.newGame()
         if data:
             i, j = 0, 0
