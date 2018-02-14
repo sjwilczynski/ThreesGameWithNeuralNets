@@ -11,6 +11,8 @@ EASY_MAX_MOVES = 50
 
 
 class EasyGame(Model):
+    flatten_state_info_size = EASY_WIDTH * EASY_HEIGHT
+
     def __init__(self, save_game=False, data=None):
         super(EasyGame, self).__init__(save_game)
         self.width = EASY_WIDTH
@@ -89,3 +91,4 @@ class EasyGame(Model):
         result = np.array(self.board.flatten())
         result = np.append(result, [])
         return result
+

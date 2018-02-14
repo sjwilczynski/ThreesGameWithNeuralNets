@@ -78,7 +78,9 @@ if __name__ == u'__main__':
             return [1, 2, 3, 4]
 
 
+    print(EasyGame.flatten_state_info_size)
+    print(EasyGame.getTransitionDataSize())
     print Loader.get_random_states(EasyGame(), 2, 10)
-    loa = Loader(game=EasyGame())
+    loa = Loader(game=Threes())
     #    print random.choice(loa.game.getPossibleMoves())
     print loa.get(f())

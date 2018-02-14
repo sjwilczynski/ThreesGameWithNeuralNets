@@ -1,8 +1,9 @@
-from gameModel import *
-from qLearningNet import *
-from min_max import best_move as minimax_choose_move
-from test import printer
 import random
+
+from gameModel import *
+from min_max import best_move as minimax_choose_move
+from qLearningNet import *
+from test import printer
 
 MOVES_DICT = {u"w": MoveEnum.Up,
               u"a": MoveEnum.Left,
@@ -64,7 +65,7 @@ class QLearningNetAI(AIModel):
         if net is not None:
             self.ai = net
         else:
-            self.ai = QLearningNet()
+            self.ai = QLearningNet(input_size=game.flatten_state_info_size)
             if filename is not None:
                 print "Loading net parameters"
                 self.ai.load_parameters(filename)
@@ -86,6 +87,17 @@ class RandomAI(AIModel):
         possible_moves = self.game.getPossibleMoves()
         return possible_moves[np.random.randint(0, len(possible_moves))]
 
+
+class SimpleAI(AIModel):
+    def __init__(self, game):
+        super(SimpleAI, self).__init__(game)
+
+    def choose_move(self, verbose=False):
+        moves = [MoveEnum.Right, MoveEnum.Down, MoveEnum.Up, MoveEnum.Left]
+        for move in moves:
+            if self.game.canMove(move):
+                return move
+        return None
 
 class MiniMaxAI(AIModel):
     def __init__(self, game):

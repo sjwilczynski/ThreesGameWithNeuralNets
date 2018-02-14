@@ -1,12 +1,14 @@
 from __future__ import absolute_import
 
-import random
 import math
+import random
 
 from gameModel import *
 
 
 class G2048(Model):
+    flatten_state_info_size = WIDTH * HEIGHT
+
     def __init__(self, save_game=True, data=None):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH

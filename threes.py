@@ -8,8 +8,9 @@ from gameModel import *
 
 REROLL_THREES = True
 
-
 class Threes(Model):
+    flatten_state_info_size = WIDTH * HEIGHT + 3
+
     def __init__(self, save_game=True, data=None):
         Model.__init__(self, save_game)
         self.width = WIDTH
@@ -202,6 +203,7 @@ class Threes(Model):
             result = result * (2.0 ** 0.5)
             result = np.log2(result, where=[result > 0])
             result = result / 15.0
+        result = np.append(result, [])
         return result
 
         '''

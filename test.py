@@ -1,7 +1,9 @@
 from __future__ import absolute_import
-from threes import *
-from io import open
 
+from AIModels import *
+from threes import *
+
+TEST_NUM = 1
 
 def printer(curr_game):
     board = curr_game.stateInfo().board
@@ -18,7 +20,7 @@ def put_piece(t, x, y, el):
     t.board[y][x] = el
 
 
-if __name__ == u'__main__':
+if TEST_NUM == 0 and __name__ == u'__main__':
     seed = int(time.time())
     random.seed(seed)
     game = Threes()
@@ -54,3 +56,10 @@ if __name__ == u'__main__':
         printer(game)
     if game.save_game:
         file.close()
+
+if TEST_NUM == 1 and __name__ == u'__main__':
+    game = Threes(save_game=False)
+    ai = RandomAI(game)
+    scores, move_count, highs = AIModel.test_ai(ai, 1, verbose=True)
+    print move_count
+    print np.mean(scores), np.mean(highs)

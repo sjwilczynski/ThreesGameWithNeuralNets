@@ -33,6 +33,8 @@ class State(object):
 
 
 class Model(object):
+    flatten_state_info_size = 0
+
     def __init__(self, save_game, data=None):
         self.save_game = save_game
 
@@ -55,7 +57,7 @@ class Model(object):
         raise NotImplemented
         
     def tiles_count(self):
-        return np.count_nonzero(self.board)
+        return np.count_nonzero(self.stateInfo().board)
 
     def getTransitionData(self, move, make_move=False, normalize=False):
         game = self
@@ -82,6 +84,11 @@ class Model(object):
         This method should return all data about current state of the model used by neural network.
         """
         raise NotImplemented
+
+    @classmethod
+    def getTransitionDataSize(class_name):
+        return 2 * class_name.flatten_state_info_size + 2
+
 
 
 def getFilename():
