@@ -25,6 +25,8 @@ class EasyGame(Model):
             i, j = 0, 0
             for elem in data:
                 self.board[j][i] = elem
+                if elem == 1:
+                    self.elem_pos = [j, i]
                 i += 1
                 if i >= self.width:
                     j += 1
