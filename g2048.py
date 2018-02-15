@@ -9,13 +9,15 @@ from gameModel import *
 class G2048(Model):
     flatten_state_info_size = WIDTH * HEIGHT
 
-    def __init__(self, save_game=True, data=None):
+    def __init__(self, save_game=True, data=None, normalized=False):
         super(G2048, self).__init__(save_game)
         self.width = WIDTH
         self.height = HEIGHT
         self.highest = 4
         self.newGame()
         if data:
+            if normalized:
+                data = self._denormalize_board(data)
             i, j = 0, 0
             for elem in data:
                 self.board[j][i] = elem
@@ -111,19 +113,20 @@ class G2048(Model):
     def data(self, normalize=False):
         result = np.array(self.board.flatten())
         if normalize:
-            result = np.log2(result, where=[self.board.flatten() > 0])
-            result = result / 16.0
+            result = self._normalize_board(result)
         result = np.append(result, [])
         return result
 
-        '''
-        result = np.array(self.board.flatten())
-        result = np.append(result, nexts)
-        if normalize:
-            result = result / (2.0 ** 15)
-        result = np.append(result, [])
+    def _normalize_board(self, board):
+        result = np.where(board > 1, np.log2(board), 0.0) / np.log2(2.0 ** 16)
         return result
-        '''
+
+    def _denormalize_board(self, board):
+        result = np.array(board)
+        result = result * np.log2(2.0 ** 16)
+        result = 2 ** result
+        result = result - (np.abs(result - 1) < 0.0001)
+        return np.asarray(np.round(result), dtype=int).tolist()
 
     def score(self, normalize=False):
         res = self.curr_score

@@ -35,7 +35,7 @@ class State(object):
 class Model(object):
     flatten_state_info_size = 0
 
-    def __init__(self, save_game, data=None):
+    def __init__(self, save_game, data=None, normalized=False):
         self.save_game = save_game
 
     def newGame(self):

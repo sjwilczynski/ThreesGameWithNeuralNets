@@ -13,7 +13,7 @@ EASY_MAX_MOVES = 50
 class EasyGame(Model):
     flatten_state_info_size = EASY_WIDTH * EASY_HEIGHT
 
-    def __init__(self, save_game=False, data=None):
+    def __init__(self, save_game=False, data=None, normalized=False):
         super(EasyGame, self).__init__(save_game)
         self.width = EASY_WIDTH
         self.height = EASY_HEIGHT

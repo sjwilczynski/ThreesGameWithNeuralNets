@@ -8,15 +8,19 @@ from gameModel import *
 
 REROLL_THREES = True
 
+
 class Threes(Model):
     flatten_state_info_size = WIDTH * HEIGHT + 3
 
-    def __init__(self, save_game=True, data=None):
+    def __init__(self, save_game=True, data=None, normalized=False):
         Model.__init__(self, save_game)
         self.width = WIDTH
         self.height = HEIGHT
+        self.fake_move = False
         self.newGame()
-        if data:
+        if data != None:
+            if normalized:
+                data = self._denormalize_board(data)
             i, j = 0, 0
             size = self.width * self.height
             for elem in data[:size]:
@@ -26,10 +30,12 @@ class Threes(Model):
                     j += 1
                     i = 0
             self._parseNext(data[-3:])
-            quantity_1 = data[:size].count(1)
-            quantity_2 = data[:size].count(2)
+            self.fake_move = True
+            quantity_1 = data[:size].count(1) + (self.next == 1)
+            quantity_2 = data[:size].count(2) + (self.next == 2)
             loaded = [min(4, 4 - (quantity_2 - quantity_1)), min(4, 4 - (quantity_1 - quantity_2)), 4]
             self.poss_index = sum(loaded)
+            self.poss_index %= 12
             self.poss_nexts = np.array([])
             for i in xrange(3):
                 self.poss_nexts = np.append(self.poss_nexts, [i + 1 for j in xrange(loaded[i])])
@@ -142,7 +148,9 @@ class Threes(Model):
             self.next = 3 * 2 ** p
             return self.next
         self.next = self.poss_nexts[self.poss_index]
-        self.poss_index += 1
+        if not self.fake_move:
+            self.poss_index += 1
+            self.fake_move = False
         if self.poss_index >= len(self.poss_nexts):
             random.shuffle(self.poss_nexts)
             self.poss_index = 0
@@ -193,29 +201,28 @@ class Threes(Model):
         return result
 
     def data(self, normalize=False):
-
         result = np.array(self.board.flatten())
         nexts = self.visible_nexts
         for i in xrange(3 - len(nexts)):
             nexts = np.append(nexts, [0])
         result = np.append(result, nexts)
         if normalize:
-            result = result * (2.0 ** 0.5)
-            result = np.log2(result, where=[result > 0])
-            result = result / 15.0
+            result = self._normalize_board(result)
         result = np.append(result, [])
         return result
 
-        '''
-        result = np.array(self.board.flatten())
-        nexts = self.visible_nexts
-        for i in xrange(3 - len(nexts)):
-            nexts += [0]
-        result = np.append(result, nexts)
-        if normalize:
-            result = result / (3.0 * 2 ** 12)
+    def _normalize_board(self, board):
+        result = board * (2.0 ** 0.5)
+        result = np.where(result > 1, np.log2(result), 0.0) / np.log2(3.0 * 2.0 ** 12)
         return result
-        '''
+
+    def _denormalize_board(self, board):
+        result = np.array(board)
+        result = result * np.log2(3.0 * (2.0 ** 12))
+        result = 2 ** result
+        result = result - (np.abs(result - 1) < 0.0001)
+        result /= 2 ** 0.5
+        return np.asarray(np.round(result), dtype=int).tolist()
 
     def stateInfo(self):
         return State(self.board, self.visible_nexts, self.score())

@@ -4,6 +4,7 @@ from random import *
 
 import min_max
 from easyGame import *
+from g2048 import *
 from threes import *
 
 
@@ -81,6 +82,16 @@ if __name__ == u'__main__':
     print(EasyGame.flatten_state_info_size)
     print(EasyGame.getTransitionDataSize())
     print Loader.get_random_states(EasyGame(), 2, 10)
-    loa = Loader(game=Threes())
+    GAME = G2048
+    loa = Loader(game=GAME())
+
     #    print random.choice(loa.game.getPossibleMoves())
-    print loa.get(f())
+    data = loa.get(f(), batch_size=10)
+    print data
+    for c in data:
+        t = GAME(False, data=c[-16:].tolist(), normalized=True)
+        t.makeMove(MoveEnum.Up)
+        while t.getPossibleMoves():
+            t.makeMove(t.getPossibleMoves()[0])
+            t = GAME(False, data=t.data(normalize=True).tolist(), normalized=True)
+            print t.board
